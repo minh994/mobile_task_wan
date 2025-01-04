@@ -1,31 +1,34 @@
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:mobile_app/models/user.dart';
+import '../models/user.dart';
 
 class UserService extends GetxService {
   final _db = FirebaseFirestore.instance;
-  final Rx<UserModel?> currentUser = Rx<UserModel?>(null);
+  final currentUser = Rxn<UserModel>();
 
-  Future<UserModel> loadUser(String uid) async {
+  // Collection reference
+  CollectionReference get _usersRef => _db.collection('users');
+
+  Future<void> loadUser(String userId) async {
     try {
-      final doc = await _db.collection('users').doc(uid).get();
-      if (doc.exists) {
-        final user = UserModel.fromMap(doc.data()!);
-        currentUser.value = user;
-        return user;
+      final doc = await _usersRef.doc(userId).get();
+      if (doc.exists && doc.data() != null) {
+        currentUser.value = UserModel.fromFirestore(
+          doc.id,
+          doc.data() as Map<String, dynamic>,
+        );
       }
-      throw Exception('Không thể tải thông tin người dùng');
     } catch (e) {
       throw Exception('Không thể tải thông tin người dùng: $e');
     }
   }
 
-  Future<void> updateUser(String uid, Map<String, dynamic> data) async {
+  Future<void> updateUser(String userId, Map<String, dynamic> data) async {
     try {
-      await _db.collection('users').doc(uid).update(data);
-      await loadUser(uid); // Reload user data after update
+      await _usersRef.doc(userId).set(data, SetOptions(merge: true));
+      await loadUser(userId);
     } catch (e) {
-      throw Exception('Cập nhật thông tin thất bại: $e');
+      throw Exception('Không thể cập nhật thông tin người dùng: $e');
     }
   }
 }

@@ -15,43 +15,24 @@ class UserModel {
     required this.location,
   });
 
-  factory UserModel.fromMap(Map<String, dynamic> map) {
+  factory UserModel.fromFirestore(String id, Map<String, dynamic> data) {
     return UserModel(
-      id: map['id'] as String,
-      name: map['name'] as String,
-      email: map['email'] as String,
-      photoUrl: map['photoUrl'] as String,
-      occupation: map['occupation'] as String,
-      location: map['location'] as String,
+      id: id,
+      name: data['name'] ?? '',
+      email: data['email'] ?? '',
+      photoUrl: data['photoUrl'] ?? '',
+      occupation: data['occupation'] ?? '',
+      location: data['location'] ?? '',
     );
   }
 
   Map<String, dynamic> toFirestore() {
     return {
-      'id': id,
       'name': name,
       'email': email,
       'photoUrl': photoUrl,
       'occupation': occupation,
       'location': location,
     };
-  }
-
-  UserModel copyWith({
-    String? id,
-    String? name,
-    String? email,
-    String? photoUrl,
-    String? occupation,
-    String? location,
-  }) {
-    return UserModel(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      email: email ?? this.email,
-      photoUrl: photoUrl ?? this.photoUrl,
-      occupation: occupation ?? this.occupation,
-      location: location ?? this.location,
-    );
   }
 }

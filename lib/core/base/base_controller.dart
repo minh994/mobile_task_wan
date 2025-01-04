@@ -45,4 +45,12 @@ abstract class BaseController extends GetxController {
   void clearError() {
     _errorMessage.value = '';
   }
+
+  void showMessage(String message) {
+    Get.snackbar(
+      'Thông báo',
+      message,
+      snackPosition: SnackPosition.BOTTOM,
+    );
+  }
 }

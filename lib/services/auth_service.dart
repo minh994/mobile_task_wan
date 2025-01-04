@@ -21,10 +21,17 @@ class AuthService extends GetxService {
     String password,
   ) async {
     try {
-      return await _auth.signInWithEmailAndPassword(
+      final userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      // Kiểm tra xác thực email
+      if (!userCredential.user!.emailVerified) {
+        throw Exception('Email chưa được xác thực. Vui lòng xác thực email trước khi đăng nhập.');
+      }
+
+      return userCredential;
     } catch (e) {
       throw Exception('Đăng nhập thất bại: $e');
     }
@@ -36,40 +43,21 @@ class AuthService extends GetxService {
     String password,
   ) async {
     try {
-      return await _auth.createUserWithEmailAndPassword(
+      final userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-    } catch (e) {
-      throw Exception('Đăng ký thất bại: $e');
-    }
-  }
 
-  // Đăng nhập với Google
-  Future<UserCredential?> signInWithGoogle() async {
-    try {
-      await _googleSignIn.signOut();
+      // Gửi email xác thực
+      await userCredential.user?.sendEmailVerification();
 
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) return null;
-
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      final userCredential = await _auth.signInWithCredential(credential);
-      final user = userCredential.user;
-
-      if (user != null) {
-        // Create/Update user document
+      // Tạo document user trong Firestore
+      if (userCredential.user != null) {
         final newUser = UserModel(
-          id: user.uid,
-          name: user.displayName ?? 'User',
-          email: user.email ?? '',
-          photoUrl: user.photoURL ?? '',
+          id: userCredential.user!.uid,
+          name: 'User',
+          email: email,
+          photoUrl: '',
           occupation: 'Not set',
           location: 'Not set',
         );
@@ -79,13 +67,76 @@ class AuthService extends GetxService {
 
       return userCredential;
     } catch (e) {
-      throw Exception('Failed to sign in with Google: $e');
+      throw Exception('Đăng ký thất bại: $e');
+    }
+  }
+
+  // Đăng nhập với Google
+  Future<UserCredential> signInWithGoogle() async {
+    try {
+      await _googleSignIn.signOut();
+
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        throw Exception('Đăng nhập Google bị hủy');
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final userCredential = await _auth.signInWithCredential(credential);
+
+      // Tạo/Cập nhật user document
+      final user = userCredential.user!;
+      final newUser = UserModel(
+        id: user.uid,
+        name: user.displayName ?? 'User',
+        email: user.email ?? '',
+        photoUrl: user.photoURL ?? '',
+        occupation: 'Not set',
+        location: 'Not set',
+      );
+      await _userService.updateUser(newUser.id, newUser.toFirestore());
+
+      return userCredential;
+    } catch (e) {
+      throw Exception('Đăng nhập Google thất bại: $e');
+    }
+  }
+
+  // Kiểm tra trạng thái xác thực email
+  Future<bool> checkEmailVerified() async {
+    try {
+      await _auth.currentUser?.reload();
+      return _auth.currentUser?.emailVerified ?? false;
+    } catch (e) {
+      throw Exception('Không thể kiểm tra trạng thái xác thực: $e');
+    }
+  }
+
+  // Gửi lại email xác thực
+  Future<void> resendVerificationEmail() async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) {
+        throw Exception('Không tìm thấy người dùng');
+      }
+      await user.sendEmailVerification();
+    } catch (e) {
+      throw Exception('Không thể gửi lại email xác thực: $e');
     }
   }
 
   // Đăng xuất
   Future<void> signOut() async {
-    await _googleSignIn.signOut();
-    await _auth.signOut();
+    try {
+      await _googleSignIn.signOut();
+      await _auth.signOut();
+    } catch (e) {
+      throw Exception('Đăng xuất thất bại: $e');
+    }
   }
 }

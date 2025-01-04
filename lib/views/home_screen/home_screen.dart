@@ -68,39 +68,6 @@ class HomeScreen extends BaseView<HomeController> {
     );
   }
 
-  Widget _buildCategoryCard(
-    String title,
-    IconData icon,
-    Color color,
-    VoidCallback onTap,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 16),
-      child: InkWell(
-        onTap: onTap,
-        child: Container(
-          width: 100,
-          decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: color.withOpacity(0.3)),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, color: color),
-              const SizedBox(height: 8),
-              Text(
-                title,
-                style: TextStyle(color: color, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildTaskList() {
     return Obx(() {
       if (_taskService.tasks.isEmpty) {

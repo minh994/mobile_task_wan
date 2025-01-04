@@ -34,4 +34,5 @@ flutter:
     - assets/google.png
     - assets/facebook.png
     - assets/twitter.png
+    - assets/verify_email.png
 

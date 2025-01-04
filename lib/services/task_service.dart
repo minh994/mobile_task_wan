@@ -1,19 +1,12 @@
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:mobile_app/models/task.dart';
+import '../models/task.dart';
 
 class TaskService extends GetxService {
   final _db = FirebaseFirestore.instance;
   final RxList<Task> tasks = <Task>[].obs;
 
-  @override
-  Future<TaskService> init() async {
-    await loadTasks('123');
-    return this;
-  }
-
-  // Load tasks của user
-  Future<List<Task>> loadTasks(String userId) async {
+  Future<void> loadTasks(String userId) async {
     try {
       final snapshot = await _db
           .collection('tasks')
@@ -25,9 +18,8 @@ class TaskService extends GetxService {
           .toList();
 
       tasks.value = loadedTasks;
-      return loadedTasks;
     } catch (e) {
-      throw Exception('Không thể tải danh sách công việc: $e');
+      throw Exception('Cannot load tasks: $e');
     }
   }
 

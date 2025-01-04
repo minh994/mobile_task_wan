@@ -15,13 +15,13 @@ class EditTaskScreen extends StatefulWidget {
 }
 
 class _EditTaskScreenState extends State<EditTaskScreen> {
-  late TextEditingController _titleController;
-  late TextEditingController _descriptionController;
-  late TextEditingController _todoController;
-  String _selectedCategory = 'Task';
-  DateTime _startDate = DateTime.now();
-  DateTime _endDate = DateTime.now().add(const Duration(days: 7));
-  List<String> _todoItems = [];
+  late final TextEditingController _titleController;
+  late final TextEditingController _descriptionController;
+  late final TextEditingController _todoController;
+  late final String _selectedCategory;
+  late final DateTime _startDate;
+  late final DateTime _endDate;
+  late final List<String> _todoItems;
 
   @override
   void initState() {
@@ -31,8 +31,8 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
     _todoController = TextEditingController();
     _selectedCategory = widget.task.type ?? 'Task';
     _startDate = widget.task.dueDate;
-    _endDate = widget.task.dueDate.add(const Duration(days: 7));
-    _todoItems = widget.task.todoItems ?? [];
+    _endDate = widget.task.dueDate;
+    _todoItems = List.from(widget.task.todoItems);
   }
 
   @override

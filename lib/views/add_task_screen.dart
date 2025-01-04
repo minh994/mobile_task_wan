@@ -12,9 +12,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _todoController = TextEditingController();
-  String _selectedCategory = 'Priority Task';
+  final String _selectedCategory = 'Priority Task';
+  final List<String> _todoItems = [];
   DateTime? _endDate;
-  List<String> _todoItems = [];
 
   @override
   void initState() {
