@@ -1,0 +1,37 @@
+name: mobile_app
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.5.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.15.3
+  cloud_firestore: ^4.13.6
+  google_sign_in: ^6.1.6
+  get_it: ^7.6.4
+  connectivity_plus: ^6.1.1
+  image_picker: ^1.1.2
+  firebase_storage: ^11.7.7
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/verification.png
+    - assets/verification_success.png
+    - assets/google.png
+    - assets/facebook.png
+    - assets/twitter.png
+    - assets/laravel_icon.png
+

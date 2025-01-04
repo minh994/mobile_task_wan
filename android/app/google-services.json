@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "802883275734",
+    "firebase_url": "https://mobile-5c919-default-rtdb.firebaseio.com",
+    "project_id": "mobile-5c919",
+    "storage_bucket": "mobile-5c919.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:802883275734:android:8b1a40ab004207c6b8b277",
+        "android_client_info": {
+          "package_name": "com.example.mobile_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "802883275734-va03t961qrplcuqsgenkm4q58k7s8nl2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDc1bVnSr2xAIOBLfoGafOBFK4hPP8DqX4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "802883275734-va03t961qrplcuqsgenkm4q58k7s8nl2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
