@@ -17,6 +17,7 @@ dependencies:
   connectivity_plus: ^6.1.1
   image_picker: ^1.1.2
   firebase_storage: ^11.7.7
+  get: ^4.6.5
 
 
 dev_dependencies:
@@ -33,5 +34,4 @@ flutter:
     - assets/google.png
     - assets/facebook.png
     - assets/twitter.png
-    - assets/laravel_icon.png
 
