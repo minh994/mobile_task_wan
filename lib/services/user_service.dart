@@ -6,12 +6,9 @@ class UserService extends GetxService {
   final _db = FirebaseFirestore.instance;
   final currentUser = Rxn<UserModel>();
 
-  // Collection reference
-  CollectionReference get _usersRef => _db.collection('users');
-
   Future<void> loadUser(String userId) async {
     try {
-      final doc = await _usersRef.doc(userId).get();
+      final doc = await _db.collection('users').doc(userId).get();
       if (doc.exists && doc.data() != null) {
         currentUser.value = UserModel.fromFirestore(
           doc.id,
@@ -19,15 +16,20 @@ class UserService extends GetxService {
         );
       }
     } catch (e) {
+      print('Error loading user: $e');
       throw Exception('Không thể tải thông tin người dùng: $e');
     }
   }
 
   Future<void> updateUser(String userId, Map<String, dynamic> data) async {
     try {
-      await _usersRef.doc(userId).set(data, SetOptions(merge: true));
+      await _db.collection('users').doc(userId).set(
+        data,
+        SetOptions(merge: true),
+      );
       await loadUser(userId);
     } catch (e) {
+      print('Error updating user: $e');
       throw Exception('Không thể cập nhật thông tin người dùng: $e');
     }
   }

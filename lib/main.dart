@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
-import 'package:mobile_app/core/constants/app_colors.dart';
-import 'package:mobile_app/firebase_options.dart';
-import 'package:mobile_app/core/bindings/initial_binding.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'core/routes/app_router.dart';
+import 'services/auth_service.dart';
+import 'services/user_service.dart';
+import 'services/task_service.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,24 +15,34 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(const MyApp());
+  // Initialize core services first
+  Get.put<UserService>(UserService(), permanent: true);
+  Get.put<AuthService>(AuthService(), permanent: true);
+  Get.put<TaskService>(TaskService(), permanent: true);
+
+  // Get initial route based on auth status
+  final prefs = await SharedPreferences.getInstance();
+  final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+  runApp(MyApp(initialRoute: isLoggedIn ? '/home' : '/login'));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String initialRoute;
+  
+  const MyApp({Key? key, required this.initialRoute}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Task Management',
       theme: ThemeData(
-        primaryColor: AppColors.primary,
-        scaffoldBackgroundColor: AppColors.white,
+        primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: Colors.white,
       ),
-      initialBinding: InitialBinding(),
-      initialRoute: AppRouter.defaultRoute,
+      initialRoute: initialRoute,
       getPages: AppRouter.routes,
-      defaultTransition: Transition.fade,
+      debugShowCheckedModeBanner: false,
     );
   }
 }

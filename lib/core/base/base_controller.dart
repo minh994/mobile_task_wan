@@ -23,7 +23,6 @@ abstract class BaseController extends GetxController {
     Get.snackbar(
       'Lỗi',
       message,
-      snackPosition: SnackPosition.BOTTOM,
     );
   }
 
@@ -50,7 +49,6 @@ abstract class BaseController extends GetxController {
     Get.snackbar(
       'Thông báo',
       message,
-      snackPosition: SnackPosition.BOTTOM,
     );
   }
 }

@@ -1,60 +1,110 @@
-import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 import '../models/task.dart';
 
 class TaskService extends GetxService {
-  final _db = FirebaseFirestore.instance;
-  final RxList<Task> tasks = <Task>[].obs;
+  final _firestore = FirebaseFirestore.instance;
+  final tasks = <Task>[].obs;
 
   Future<void> loadTasks(String userId) async {
     try {
-      final snapshot = await _db
+      final snapshot = await _firestore
+          .collection('users')
+          .doc(userId)
           .collection('tasks')
-          .where('userId', isEqualTo: userId)
+          .orderBy('createdAt', descending: true)
           .get();
 
-      final loadedTasks = snapshot.docs
-          .map((doc) => Task.fromFirestore(doc.id, doc.data()))
+      tasks.value = snapshot.docs
+          .map((doc) => Task.fromJson({...doc.data(), 'id': doc.id}))
           .toList();
-
-      tasks.value = loadedTasks;
     } catch (e) {
-      throw Exception('Cannot load tasks: $e');
+      print('Error loading tasks: $e');
+      rethrow;
     }
   }
 
-  // Thêm task mới
-  Future<Task> addTask(Task task) async {
+  Future<void> addTask(Task task, String userId) async {
     try {
-      final doc = await _db.collection('tasks').add(task.toFirestore());
-      task = task.copyWith(id: doc.id);
-      tasks.add(task);
-      return task;
+      final docRef = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('tasks')
+          .add(task.toJson());
+
+      final newTask = task.copyWith(id: docRef.id);
+      tasks.add(newTask);
     } catch (e) {
-      throw Exception('Thêm công việc thất bại: $e');
+      print('Error adding task: $e');
+      rethrow;
     }
   }
 
-  // Cập nhật task
-  Future<void> updateTask(Task task) async {
+  Future<void> updateTask(Task task, String userId) async {
     try {
-      await _db.collection('tasks').doc(task.id).update(task.toFirestore());
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('tasks')
+          .doc(task.id)
+          .update(task.toJson());
+
       final index = tasks.indexWhere((t) => t.id == task.id);
       if (index != -1) {
         tasks[index] = task;
       }
+
+      await loadTasks(userId);
     } catch (e) {
-      throw Exception('Cập nhật công việc thất bại: $e');
+      print('Error updating task: $e');
+      rethrow;
     }
   }
 
-  // Xóa task
-  Future<void> deleteTask(String taskId) async {
+  Future<void> deleteTask(String taskId, String userId) async {
     try {
-      await _db.collection('tasks').doc(taskId).delete();
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('tasks')
+          .doc(taskId)
+          .delete();
+
       tasks.removeWhere((task) => task.id == taskId);
+      
+      await loadTasks(userId);
+      
+      tasks.refresh();
     } catch (e) {
-      throw Exception('Xóa công việc thất bại: $e');
+      print('Error deleting task: $e');
+      rethrow;
+    }
+  }
+
+  Future<List<Task>> getTasksByDate(DateTime date, String userId) async {
+    try {
+      final startOfDay = DateTime(date.year, date.month, date.day);
+      final endOfDay = startOfDay.add(const Duration(days: 1));
+
+      final snapshot = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('tasks')
+          .where('createdAt', isGreaterThanOrEqualTo: startOfDay)
+          .where('createdAt', isLessThan: endOfDay)
+          .get();
+
+      final tasksForDate = snapshot.docs
+          .map((doc) => Task.fromJson({...doc.data(), 'id': doc.id}))
+          .toList();
+
+      // Force UI update for calendar view
+      tasks.refresh();
+      
+      return tasksForDate;
+    } catch (e) {
+      print('Error getting tasks by date: $e');
+      return [];
     }
   }
 }

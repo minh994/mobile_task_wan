@@ -6,9 +6,9 @@ import '../../services/user_service.dart';
 class InitialBinding extends Bindings {
   @override
   void dependencies() {
-    // Khởi tạo UserService trước
-    Get.put(UserService(), permanent: true);
-    Get.put(AuthService(), permanent: true);
-    Get.put(TaskService(), permanent: true);
+    // Initialize services in correct order
+    Get.put<UserService>(UserService(), permanent: true);
+    Get.put<AuthService>(AuthService(), permanent: true);
+    Get.put<TaskService>(TaskService(), permanent: true);
   }
 } 

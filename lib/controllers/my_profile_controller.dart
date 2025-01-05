@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../services/user_service.dart';
 import '../models/user.dart';
+import '../core/base/base_controller.dart';
 
-class MyProfileController extends GetxController {
+class MyProfileController extends BaseController {
   final UserService _userService = Get.find<UserService>();
 
   final nameController = TextEditingController();
@@ -19,15 +20,18 @@ class MyProfileController extends GetxController {
   }
 
   Future<void> updateProfile() async {
-    final currentUser = _userService.currentUser.value;
-    if (currentUser != null) {
-      final updatedUser = currentUser.copyWith(
-        name: nameController.text,
-        occupation: occupationController.text,
-        location: locationController.text,
-      );
-      await _userService.updateUser(currentUser.id, updatedUser.toFirestore());
-    }
+    await handleError(() async {
+      final currentUser = _userService.currentUser.value;
+      if (currentUser != null) {
+        final updatedUser = currentUser.copyWith(
+          name: nameController.text,
+          occupation: occupationController.text,
+          location: locationController.text,
+        );
+        await _userService.updateUser(currentUser.id, updatedUser.toFirestore());
+        showMessage('Cập nhật thông tin thành công');
+      }
+    });
   }
 
   @override
@@ -35,5 +39,6 @@ class MyProfileController extends GetxController {
     nameController.dispose();
     occupationController.dispose();
     locationController.dispose();
+    super.onClose();
   }
 }

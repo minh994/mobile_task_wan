@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:mobile_app/services/auth_service.dart';
 import '../core/base/base_controller.dart';
@@ -32,11 +33,15 @@ class RegisterController extends BaseController {
     }
 
     await handleError(() async {
-      final userCredential = await _authService.createUserWithEmailAndPassword(
+      final UserCredential = await _authService.createUserWithEmailAndPassword(
         email.value,
         password.value,
       );
-      Get.offNamed('/verify-email', arguments: {'email': email.value});
+      if (UserCredential != null) {
+        Get.offNamed('/verify-email', arguments: {'email': email.value});
+      } else {
+        showError('User not found');
+      }
     });
   }
 

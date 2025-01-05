@@ -15,6 +15,24 @@ class UserModel {
     required this.location,
   });
 
+  UserModel copyWith({
+    String? id,
+    String? name,
+    String? email,
+    String? photoUrl,
+    String? occupation,
+    String? location,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      photoUrl: photoUrl ?? this.photoUrl,
+      occupation: occupation ?? this.occupation,
+      location: location ?? this.location,
+    );
+  }
+
   factory UserModel.fromFirestore(String id, Map<String, dynamic> data) {
     return UserModel(
       id: id,

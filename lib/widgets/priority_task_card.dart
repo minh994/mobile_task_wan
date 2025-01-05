@@ -65,7 +65,7 @@ class PriorityTaskCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    '${task.daysRemaining} days',
+                    '${task.dueDate} days',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 12,
