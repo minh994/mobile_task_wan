@@ -1,13 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mobile_app/services/auth_service.dart';
 import '../../core/base/base_view.dart';
 import '../../controllers/my_profile_controller.dart';
 import '../../core/constants/app_colors.dart';
 import 'package:intl/intl.dart';
 
 class MyProfileScreen extends BaseView<MyProfileController> {
-  const MyProfileScreen({super.key});
-
+  MyProfileScreen({super.key});
+  final _authService = Get.find<AuthService>();
   @override
   Widget buildView(BuildContext context) {
     return Scaffold(
@@ -85,14 +88,14 @@ class MyProfileScreen extends BaseView<MyProfileController> {
     return Stack(
       children: [
         Obx(() => CircleAvatar(
-          radius: 50,
-          backgroundImage: controller.photoUrl.isNotEmpty
-              ? NetworkImage(controller.photoUrl.value)
-              : null,
-          child: controller.photoUrl.isEmpty
-              ? const Icon(Icons.person, size: 50, color: Colors.grey)
-              : null,
-        )),
+              radius: 50,
+              backgroundImage: controller.photoUrl.isNotEmpty
+                  ? FileImage(File(controller.photoUrl.value))
+                  : null,
+              child: controller.photoUrl.isEmpty
+                  ? const Icon(Icons.person, size: 50, color: Colors.grey)
+                  : null,
+            )),
         Positioned(
           bottom: 0,
           right: 0,
@@ -117,36 +120,39 @@ class MyProfileScreen extends BaseView<MyProfileController> {
   }
 
   Widget _buildForm() {
-    return Column(
-      children: [
-        _buildProfileField(
-          'Name',
-          controller.nameController.text,
-          Icons.person_outline,
-          onTap: () => _showEditDialog('Name', controller.nameController),
-        ),
-        const SizedBox(height: 20),
-        _buildProfileField(
-          'Profession',
-          controller.professionController.text,
-          Icons.work_outline,
-          onTap: () => _showEditDialog('Profession', controller.professionController),
-        ),
-        const SizedBox(height: 20),
-        _buildProfileField(
-          'Date of Birth',
-          controller.formattedDate,
-          Icons.calendar_today,
-          onTap: () => _showDatePicker(),
-        ),
-        const SizedBox(height: 20),
-        _buildProfileField(
-          'Email',
-          controller.emailController.text,
-          Icons.email_outlined,
-          enabled: false,
-        ),
-      ],
+    return Obx(
+      () => Column(
+        children: [
+          _buildProfileField(
+            'Name',
+            _authService.currentUserModel.value?.name ?? '',
+            Icons.person_outline,
+            onTap: () => _showEditDialog('Name', controller.nameController),
+          ),
+          const SizedBox(height: 20),
+          _buildProfileField(
+            'Profession',
+            _authService.currentUserModel.value?.occupation ?? '',
+            Icons.work_outline,
+            onTap: () =>
+                _showEditDialog('Profession', controller.professionController),
+          ),
+          const SizedBox(height: 20),
+          _buildProfileField(
+            'Date of Birth',
+            controller.formattedDate,
+            Icons.calendar_today,
+            onTap: () => _showDatePicker(),
+          ),
+          const SizedBox(height: 20),
+          _buildProfileField(
+            'Email',
+            _authService.currentUser.value?.email ?? '',
+            Icons.email_outlined,
+            enabled: false,
+          ),
+        ],
+      ),
     );
   }
 
@@ -185,9 +191,9 @@ class MyProfileScreen extends BaseView<MyProfileController> {
                 Expanded(
                   child: Text(
                     value,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
-                      color: enabled ? Colors.black87 : Colors.grey,
+                      color: Colors.black87,
                     ),
                   ),
                 ),
@@ -215,7 +221,8 @@ class MyProfileScreen extends BaseView<MyProfileController> {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(20)),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.1),
@@ -280,13 +287,16 @@ class MyProfileScreen extends BaseView<MyProfileController> {
 
   Widget _buildCalendarHeader() {
     return Obx(() {
-      final currentMonth = DateFormat('MMMM, yyyy').format(controller.tempSelectedDate.value);
+      final currentMonth =
+          DateFormat('MMMM, yyyy').format(controller.tempSelectedDate.value);
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
             icon: const Icon(Icons.chevron_left),
-            onPressed: () => controller.tempSelectedDate.value = controller.tempSelectedDate.value.subtract(const Duration(days: 30)),
+            onPressed: () => controller.tempSelectedDate.value = controller
+                .tempSelectedDate.value
+                .subtract(const Duration(days: 30)),
             color: AppColors.primary,
           ),
           Text(
@@ -298,7 +308,8 @@ class MyProfileScreen extends BaseView<MyProfileController> {
           ),
           IconButton(
             icon: const Icon(Icons.chevron_right),
-            onPressed: () => controller.tempSelectedDate.value = controller.tempSelectedDate.value.add(const Duration(days: 30)),
+            onPressed: () => controller.tempSelectedDate.value =
+                controller.tempSelectedDate.value.add(const Duration(days: 30)),
             color: AppColors.primary,
           ),
         ],
@@ -373,7 +384,8 @@ class MyProfileScreen extends BaseView<MyProfileController> {
                   day.toString(),
                   style: TextStyle(
                     color: isSelected ? Colors.white : Colors.black87,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                    fontWeight:
+                        isSelected ? FontWeight.bold : FontWeight.normal,
                   ),
                 ),
               ),
@@ -400,6 +412,7 @@ class MyProfileScreen extends BaseView<MyProfileController> {
           'Save',
           style: TextStyle(
             fontSize: 16,
+            color: Colors.white,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -407,9 +420,7 @@ class MyProfileScreen extends BaseView<MyProfileController> {
     );
   }
 
-  void _showEditDialog(String title, TextEditingController controller) {
-    final tempController = TextEditingController(text: controller.text);
-    
+  void _showEditDialog(String title, TextEditingController txtController) {
     Get.dialog(
       Dialog(
         shape: RoundedRectangleBorder(
@@ -429,7 +440,7 @@ class MyProfileScreen extends BaseView<MyProfileController> {
               ),
               const SizedBox(height: 16),
               TextField(
-                controller: tempController,
+                controller: txtController,
                 decoration: InputDecoration(
                   hintText: 'Enter $title',
                   border: OutlineInputBorder(
@@ -448,8 +459,7 @@ class MyProfileScreen extends BaseView<MyProfileController> {
                   const SizedBox(width: 8),
                   ElevatedButton(
                     onPressed: () {
-                      controller.text = tempController.text;
-                      Get.back();
+                      controller.saveProfile();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
@@ -467,4 +477,4 @@ class MyProfileScreen extends BaseView<MyProfileController> {
       ),
     );
   }
-} 
+}

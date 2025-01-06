@@ -29,8 +29,8 @@ class AuthMiddleware extends GetMiddleware {
   RouteSettings? redirect(String? route) {
     final authService = Get.find<AuthService>();
     // Kiểm tra xác thực và chuyển về trang login nếu chưa đăng nhập
-    if (!authService.isAuthenticated && 
-        route != AppRouter.login && 
+    if (!authService.isAuthenticated &&
+        route != AppRouter.login &&
         route != AppRouter.register &&
         route != AppRouter.myProfile) {
       return const RouteSettings(name: AppRouter.login);
@@ -53,7 +53,6 @@ class AppRouter {
   static const profile = '/profile';
   static const priorityTask = '/priority-task';
   static const myProfile = '/my-profile';
-  
 
   static final routes = [
     GetPage(
@@ -110,14 +109,14 @@ class AppRouter {
     ),
     GetPage(
       name: profile,
-      page: () => const ProfileScreen(),
+      page: () => ProfileScreen(),
       binding: ProfileBinding(),
       transition: Transition.fadeIn,
       transitionDuration: const Duration(milliseconds: 200),
     ),
     GetPage(
       name: myProfile,
-      page: () => const MyProfileScreen(),
+      page: () => MyProfileScreen(),
       binding: MyProfileBinding(),
       transition: Transition.rightToLeft,
       transitionDuration: const Duration(milliseconds: 200),
