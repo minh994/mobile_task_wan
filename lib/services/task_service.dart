@@ -6,6 +6,9 @@ class TaskService extends GetxService {
   final _firestore = FirebaseFirestore.instance;
   final tasks = <Task>[].obs;
 
+  // Cache data
+  final _cache = <String, List<Task>>{};
+
   Future<void> loadTasks(String userId) async {
     try {
       final snapshot = await _firestore
@@ -26,14 +29,19 @@ class TaskService extends GetxService {
 
   Future<void> addTask(Task task, String userId) async {
     try {
+      final taskData = task.toJson();
+      
       final docRef = await _firestore
           .collection('users')
           .doc(userId)
           .collection('tasks')
-          .add(task.toJson());
+          .add(taskData);
 
       final newTask = task.copyWith(id: docRef.id);
+      
       tasks.add(newTask);
+      tasks.refresh();
+
     } catch (e) {
       print('Error adding task: $e');
       rethrow;
@@ -82,6 +90,28 @@ class TaskService extends GetxService {
   }
 
   Future<List<Task>> getTasksByDate(DateTime date, String userId) async {
+    final cacheKey = '${date.toString()}_$userId';
+    
+    // Check cache first
+    if (_cache.containsKey(cacheKey)) {
+      return _cache[cacheKey]!;
+    }
+
+    try {
+      final tasks = await _loadTasksFromFirestore(date, userId);
+      _cache[cacheKey] = tasks;
+      return tasks;
+    } catch (e) {
+      print('Error getting tasks by date: $e');
+      return [];
+    }
+  }
+
+  void clearCache() {
+    _cache.clear();
+  }
+
+  Future<List<Task>> _loadTasksFromFirestore(DateTime date, String userId) async {
     try {
       final startOfDay = DateTime(date.year, date.month, date.day);
       final endOfDay = startOfDay.add(const Duration(days: 1));

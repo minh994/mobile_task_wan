@@ -10,13 +10,31 @@ class ProfileScreen extends BaseView<ProfileController> {
   @override
   Widget buildView(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.primary,
       body: SafeArea(
         child: Column(
           children: [
             _buildHeader(),
-            _buildProfileInfo(),
-            _buildMenuItems(),
+            _buildUserInfo(),
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 30),
+                    _buildMenuItems(),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -25,179 +43,212 @@ class ProfileScreen extends BaseView<ProfileController> {
   }
 
   Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: const BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(30),
-          bottomRight: Radius.circular(30),
+    return const Padding(
+      padding: EdgeInsets.all(20),
+      child: Text(
+        'Profile',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 24,
+          fontWeight: FontWeight.w600,
         ),
       ),
+    );
+  }
+
+  Widget _buildUserInfo() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Column(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Profile',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 2),
                 ),
+                child: Obx(() => CircleAvatar(
+                  radius: 38,
+                  backgroundImage: controller.photoUrl.isNotEmpty
+                      ? NetworkImage(controller.photoUrl.value)
+                      : null,
+                  child: controller.photoUrl.isEmpty
+                      ? const Icon(Icons.person, size: 40, color: Colors.white)
+                      : null,
+                )),
               ),
-              IconButton(
-                icon: const Icon(Icons.edit, color: Colors.white),
-                onPressed: controller.editProfile,
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Obx(() => Text(
+                      controller.name.value,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    )),
+                    const SizedBox(height: 4),
+                    Obx(() => Text(
+                      controller.occupation.value,
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 14,
+                      ),
+                    )),
+                  ],
+                ),
               ),
             ],
           ),
           const SizedBox(height: 20),
-          Obx(() => CircleAvatar(
-                radius: 50,
-                backgroundImage: controller.photoUrl.isNotEmpty
-                    ? NetworkImage(controller.photoUrl.value)
-                    : null,
-                child: controller.photoUrl.isEmpty
-                    ? const Icon(Icons.person, size: 50)
-                    : null,
-              )),
-          const SizedBox(height: 16),
-          Obx(() => Text(
-                controller.name.value,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              )),
-          const SizedBox(height: 8),
-          Obx(() => Text(
-                controller.occupation.value,
+          Row(
+            children: [
+              const Icon(
+                Icons.location_on_outlined,
+                color: Colors.white70,
+                size: 16,
+              ),
+              const SizedBox(width: 4),
+              Obx(() => Text(
+                controller.location.value,
                 style: const TextStyle(
                   color: Colors.white70,
-                  fontSize: 16,
+                  fontSize: 14,
                 ),
               )),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildProfileInfo() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildInfoItem(
-            'Location',
-            Icons.location_on_outlined,
-            controller.location,
-          ),
-          _buildInfoItem(
-            'Tasks Completed',
-            Icons.check_circle_outline,
-            controller.tasksCompleted,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoItem(String label, IconData icon, RxString value) {
-    return Column(
-      children: [
-        Icon(icon, color: AppColors.primary),
-        const SizedBox(height: 8),
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: 14,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Obx(() => Text(
-              value.value,
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
+              const SizedBox(width: 20),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.check_circle_outline,
+                      color: Colors.white,
+                      size: 16,
+                    ),
+                    const SizedBox(width: 4),
+                    Obx(() => Text(
+                      '${controller.tasksCompleted} Task Completed',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                      ),
+                    )),
+                  ],
+                ),
               ),
-            )),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildMenuItems() {
-    return Expanded(
-      child: ListView(
-        padding: const EdgeInsets.all(20),
-        children: [
-          _buildMenuItem(
-            'My Profile',
-            Icons.person_outline,
-            controller.goToMyProfile,
-          ),
-          _buildMenuItem(
-            'Statistic',
-            Icons.bar_chart_outlined,
-            controller.goToStatistics,
-          ),
-          _buildMenuItem(
-            'Location',
-            Icons.location_on_outlined,
-            controller.goToLocation,
-          ),
-          _buildMenuItem(
-            'Settings',
-            Icons.settings_outlined,
-            controller.goToSettings,
-          ),
-          _buildMenuItem(
-            'Logout',
-            Icons.logout,
-            controller.logout,
-            isLogout: true,
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        _buildMenuItem(
+          'My Profile',
+          Icons.person_outline,
+          onTap: controller.goToMyProfile,
+        ),
+        _buildMenuItem(
+          'Statistic',
+          Icons.bar_chart_outlined,
+          onTap: controller.goToStatistics,
+        ),
+        _buildMenuItem(
+          'Location',
+          Icons.location_on_outlined,
+          onTap: controller.goToLocation,
+        ),
+        _buildMenuItem(
+          'Settings',
+          Icons.settings_outlined,
+          onTap: controller.goToSettings,
+          showBadge: true,
+        ),
+        _buildMenuItem(
+          'Logout',
+          Icons.logout,
+          onTap: controller.logout,
+          isLogout: true,
+        ),
+      ],
     );
   }
 
   Widget _buildMenuItem(
-    String title,
-    IconData icon,
-    VoidCallback onTap, {
+    String title, 
+    IconData icon, {
+    required VoidCallback onTap,
     bool isLogout = false,
+    bool showBadge = false,
   }) {
-    return ListTile(
-      leading: Icon(
-        icon,
-        color: isLogout ? Colors.red : AppColors.primary,
-      ),
-      title: Text(
-        title,
-        style: TextStyle(
-          color: isLogout ? Colors.red : Colors.black87,
-          fontSize: 16,
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: isLogout ? Colors.red : AppColors.primary,
+              size: 24,
+            ),
+            const SizedBox(width: 12),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 16,
+                color: isLogout ? Colors.red : Colors.black87,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const Spacer(),
+            if (showBadge)
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: const BoxDecoration(
+                  color: Colors.red,
+                  shape: BoxShape.circle,
+                ),
+                child: const Text(
+                  '2',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            if (!isLogout)
+              Icon(
+                Icons.arrow_forward_ios,
+                color: Colors.grey[400],
+                size: 16,
+              ),
+          ],
         ),
       ),
-      trailing: isLogout
-          ? null
-          : const Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-              color: Colors.grey,
-            ),
-      onTap: onTap,
     );
   }
 
   Widget _buildBottomNavBar() {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      padding: const EdgeInsets.symmetric(vertical: 20),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -213,22 +264,29 @@ class ProfileScreen extends BaseView<ProfileController> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           _buildNavItem(Icons.home_outlined, false, () => Get.offNamed('/home')),
-          _buildNavItem(
-              Icons.calendar_today, false, () => Get.offNamed('/calendar')),
-          _buildNavItem(Icons.person, true, () {}),
+          _buildNavItem(Icons.calendar_today_outlined, false, () => Get.offNamed('/calendar')),
+          _buildNavItem(Icons.person, true, null),
         ],
       ),
     );
   }
 
-  Widget _buildNavItem(IconData icon, bool isSelected, VoidCallback onTap) {
+  Widget _buildNavItem(IconData icon, bool isSelected, VoidCallback? onTap) {
     return InkWell(
       onTap: onTap,
-      child: Icon(
-        icon,
-        color: isSelected ? AppColors.primary : Colors.grey,
-        size: 28,
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Icon(
+          icon,
+          color: isSelected ? AppColors.primary : Colors.grey,
+          size: 24,
+        ),
       ),
     );
   }
 }
+

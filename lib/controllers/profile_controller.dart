@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import '../core/base/base_controller.dart';
 import '../services/auth_service.dart';
 import '../services/user_service.dart';
+import '../core/routes/app_router.dart';
 
 class ProfileController extends BaseController {
   final _authService = Get.find<AuthService>();
@@ -44,8 +45,19 @@ class ProfileController extends BaseController {
     Get.toNamed('/edit-profile');
   }
 
-  void goToMyProfile() {
-    Get.toNamed('/my-profile');
+  void goToMyProfile() async {
+    try {
+      final user = _authService.currentUser.value;
+      if (user != null) {
+        Get.toNamed(AppRouter.myProfile);
+      } else {
+        showError('Phiên đăng nhập đã hết hạn');
+        Get.offAllNamed(AppRouter.login);
+      }
+    } catch (e) {
+      print('Error navigating to MyProfile: $e');
+      showError('Có lỗi xảy ra');
+    }
   }
 
   void goToStatistics() {
@@ -68,4 +80,7 @@ class ProfileController extends BaseController {
       showError('Error logging out: $e');
     }
   }
+
+  void goToHome() => Get.offAllNamed(AppRouter.home);
+  void goToCalendar() => Get.offAllNamed(AppRouter.calendar);
 } 

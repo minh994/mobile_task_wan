@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
+import 'package:mobile_app/core/routes/app_router.dart';
 import '../../core/base/base_view.dart';
 import '../../controllers/calendar_controller.dart';
 import '../../core/constants/app_colors.dart';
 import '../../models/task.dart';
-import 'package:intl/intl.dart';
+
 
 class CalendarScreen extends BaseView<CalendarController> {
   const CalendarScreen({super.key});
@@ -19,8 +20,16 @@ class CalendarScreen extends BaseView<CalendarController> {
           children: [
             _buildHeader(),
             _buildCalendar(),
-            _buildTaskTabs(),
-            Obx(() => _buildTaskList(controller.tasks)),
+            _buildTabBar(),
+            Expanded(
+              child: TabBarView(
+                controller: controller.tabController,
+                children: [
+                  _buildTaskList(true),
+                  _buildTaskList(false),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -191,66 +200,82 @@ class CalendarScreen extends BaseView<CalendarController> {
     );},);
   }
 
-  Widget _buildTaskTabs() {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: TabBar(
-        controller: controller.tabController,
-        tabs: [
-          Tab(text: 'Priority Task'),
-          Tab(text: 'Daily Task'),
+  Widget _buildTabBar() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: Row(
+        children: [
+          Expanded(
+            child: _buildTab('Priority Task', true),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: _buildTab('Daily Task', false),
+          ),
         ],
-        indicator: BoxDecoration(
-          color: AppColors.primary,
-          borderRadius: BorderRadius.circular(10),
-        ),
       ),
     );
   }
 
   Widget _buildTab(String title, bool isPriority) {
-    return GetX<CalendarController>(
-      builder: (controller) {
-        final isSelected = controller.isPrioritySelected.value == isPriority;
-        return InkWell(
-          onTap: () => controller.toggleTaskType(isPriority),
-          child: Column(
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  color: isSelected ? AppColors.primary : Colors.grey,
-                  fontSize: 20,
-                  fontWeight: isSelected ? FontWeight.w600 : null,
-                ),
+    return Obx(() {
+      final isSelected = controller.isPrioritySelected.value == isPriority;
+      return InkWell(
+        onTap: () => controller.toggleTaskType(isPriority),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            color: isSelected ? AppColors.primary : Colors.white,
+            borderRadius: BorderRadius.circular(30),
+            border: Border.all(
+              color: isSelected ? AppColors.primary : Colors.grey[300]!,
+            ),
+          ),
+          child: Center(
+            child: Text(
+              title,
+              style: TextStyle(
+                color: isSelected ? Colors.white : AppColors.primary,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
               ),
-              const SizedBox(height: 4),
-              Container(
-                height: 2,
-                width: 40,
-                color: isSelected ? AppColors.primary : Colors.transparent,
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
+  Widget _buildTaskList(bool isPriority) {
+    return Obx(() {
+      final tasks = controller.tasks.where((task) => 
+        isPriority ? task.type == 'Priority Task' : task.type == 'Daily Task'
+      ).toList();
+
+      if (tasks.isEmpty) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.task_outlined,
+                size: 64,
+                color: Colors.grey[300],
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'No ${isPriority ? 'priority' : 'daily'} tasks',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey[600],
+                ),
               ),
             ],
           ),
         );
-      },
-    );
-  }
+      }
 
-  Widget _buildTaskList(List<Task> tasks) {
-    if (tasks.isEmpty) {
-      return Expanded(
-        child: Center(
-          child: Text(
-            'No tasks for this day',
-            style: TextStyle(color: Colors.grey[600]),
-          ),
-        ),
-      );
-    }
-
-    return Expanded(
-      child: ListView.builder(
+      return ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         itemCount: tasks.length,
         itemBuilder: (context, index) {
@@ -302,43 +327,43 @@ class CalendarScreen extends BaseView<CalendarController> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
-                  Text(
-                    task.description,
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 14,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  if (task.type == 'Priority Task' && task.dueDate != null) ...[
+                  if (task.description.isNotEmpty) ...[
                     const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.calendar_today,
-                          size: 14,
-                          color: Colors.grey[600],
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          '${controller.formatShortDate(task.createdAt)} - ${controller.formatShortDate(task.dueDate)}',
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      task.description,
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 14,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.calendar_today,
+                        size: 14,
+                        color: Colors.grey[600],
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${controller.formatShortDate(task.createdAt)} - ${controller.formatShortDate(task.dueDate)}',
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
           );
         },
-      ),
-    );
+      );
+    });
   }
 
   Widget _buildBottomNavBar() {
@@ -358,9 +383,9 @@ class CalendarScreen extends BaseView<CalendarController> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _buildNavItem(Icons.home_outlined, false, () => Get.offNamed('/home')),
-          _buildNavItem(Icons.calendar_today, true, () {}),
-          _buildNavItem(Icons.person_outline, false, () {}),
+          _buildNavItem(Icons.home_outlined, false, () => Get.offNamed(AppRouter.home)),
+          _buildNavItem(Icons.calendar_today, true, () => Get.offNamed(AppRouter.calendar)),
+          _buildNavItem(Icons.person_outline, false, () => Get.offNamed(AppRouter.profile)),
         ],
       ),
     );

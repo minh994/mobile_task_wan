@@ -5,6 +5,7 @@ import '../core/base/base_controller.dart';
 import '../models/task.dart';
 import '../services/task_service.dart';
 import '../services/auth_service.dart';
+import '../core/routes/app_router.dart';
 
 class CalendarController extends BaseController with GetTickerProviderStateMixin {
   final _taskService = Get.find<TaskService>();
@@ -95,8 +96,8 @@ class CalendarController extends BaseController with GetTickerProviderStateMixin
     return DateFormat('MMM d').format(date);
   }
 
-  void goToHome() => Get.offNamed('/home');
-  void goToProfile() => Get.offNamed('/profile');
+  void goToHome() => Get.offAllNamed(AppRouter.home);
+  void goToProfile() => Get.offAllNamed(AppRouter.profile);
 
   bool isSameDay(DateTime a, DateTime b) {
     return a.year == b.year && a.month == b.month && a.day == b.day;

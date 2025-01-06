@@ -6,20 +6,34 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthService extends GetxService {
   final _auth = FirebaseAuth.instance;
   final _googleSignIn = GoogleSignIn();
-  final Rx<User?> currentUser = Rx<User?>(null);
+  final currentUser = Rxn<User>();
   final isLoggedIn = false.obs;
-
-  Stream<User?> get userStream => _auth.authStateChanges();
 
   @override
   void onInit() {
     super.onInit();
     _auth.authStateChanges().listen((User? user) {
       currentUser.value = user;
-      isLoggedIn.value = user != null;
-      _updateLoginStatus(user != null);
+      print('Auth state changed: ${user?.email}');
     });
-    checkLoginStatus();
+  }
+
+  // Kiểm tra auth state
+  bool get isAuthenticated => currentUser.value != null;
+
+  // Kiểm tra token
+  Future<bool> validateToken() async {
+    try {
+      final user = _auth.currentUser;
+      if (user != null) {
+        final idToken = await user.getIdToken();
+        return idToken != null;
+      }
+      return false;
+    } catch (e) {
+      print('Error validating token: $e');
+      return false;
+    }
   }
 
   // Check if user is already logged in

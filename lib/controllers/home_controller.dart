@@ -3,6 +3,7 @@ import '../models/task.dart';
 import '../core/base/base_controller.dart';
 import '../services/task_service.dart';
 import '../services/auth_service.dart';
+import '../core/routes/app_router.dart';
 
 class HomeController extends BaseController {
   final _taskService = Get.find<TaskService>();
@@ -71,7 +72,7 @@ class HomeController extends BaseController {
     }
   }
 
-  void goToCalendar() => Get.toNamed('/calendar');
+  void goToCalendar() => Get.offAllNamed(AppRouter.calendar);
   void goToAddTask() => Get.toNamed('/add-task');
-  void goToProfile() => Get.toNamed('/profile');
+  void goToProfile() => Get.offAllNamed(AppRouter.profile);
 }

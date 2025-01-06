@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobile_app/views/home_screen/home_screen.dart';
 import 'package:mobile_app/views/home_screen/home_screen_binding.dart';
@@ -18,6 +19,25 @@ import 'package:mobile_app/views/edit_task_screen/edit_task_screen.dart';
 import 'package:mobile_app/views/edit_task_screen/edit_task_binding.dart';
 import 'package:mobile_app/views/profile_screen/profile_screen.dart';
 import 'package:mobile_app/views/profile_screen/profile_binding.dart';
+import 'package:mobile_app/views/my_profile_screen/my_profile_screen.dart';
+import 'package:mobile_app/views/my_profile_screen/my_profile_binding.dart';
+import 'package:mobile_app/services/auth_service.dart';
+
+class AuthMiddleware extends GetMiddleware {
+  // Kiểm tra và chuyển hướng các route cần xác thực
+  @override
+  RouteSettings? redirect(String? route) {
+    final authService = Get.find<AuthService>();
+    // Kiểm tra xác thực và chuyển về trang login nếu chưa đăng nhập
+    if (!authService.isAuthenticated && 
+        route != AppRouter.login && 
+        route != AppRouter.register &&
+        route != AppRouter.myProfile) {
+      return const RouteSettings(name: AppRouter.login);
+    }
+    return null;
+  }
+}
 
 class AppRouter {
   static const defaultRoute = '/';
@@ -29,7 +49,11 @@ class AppRouter {
   static const calendar = '/calendar';
   static const verifyEmail = '/verify-email';
   static const verifySuccess = '/verify-success';
-
+  static const editTask = '/edit-task';
+  static const profile = '/profile';
+  static const priorityTask = '/priority-task';
+  static const myProfile = '/my-profile';
+  
 
   static final routes = [
     GetPage(
@@ -49,6 +73,7 @@ class AppRouter {
       page: () => const HomeScreen(),
       binding: HomeBinding(),
       transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 200),
     ),
     GetPage(
       name: verifyEmail,
@@ -75,16 +100,28 @@ class AppRouter {
       name: calendar,
       page: () => const CalendarScreen(),
       binding: CalendarBinding(),
+      transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 200),
     ),
     GetPage(
-      name: '/edit-task',
+      name: editTask,
       page: () => const EditTaskScreen(),
       binding: EditTaskBinding(),
     ),
     GetPage(
-      name: '/profile',
+      name: profile,
       page: () => const ProfileScreen(),
       binding: ProfileBinding(),
+      transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 200),
+    ),
+    GetPage(
+      name: myProfile,
+      page: () => const MyProfileScreen(),
+      binding: MyProfileBinding(),
+      transition: Transition.rightToLeft,
+      transitionDuration: const Duration(milliseconds: 200),
+      middlewares: [AuthMiddleware()],
     ),
   ];
 }

@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:mobile_app/services/auth_service.dart';
 import '../core/base/base_controller.dart';

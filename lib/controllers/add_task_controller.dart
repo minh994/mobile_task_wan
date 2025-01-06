@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mobile_app/core/constants/app_colors.dart';
 import 'package:mobile_app/services/auth_service.dart';
 import '../core/base/base_controller.dart';
 import '../models/task.dart';
 import '../services/task_service.dart';
 import 'package:intl/intl.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import '../widgets/calendar_picker.dart';
 
 class AddTaskController extends BaseController {
@@ -95,27 +93,32 @@ class AddTaskController extends BaseController {
       return;
     }
 
-    await handleError(() async {
+    try {
+      showLoading();
       final userId = _authService.currentUser.value?.uid;
       if (userId != null) {
         final task = Task(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
-          title: titleController.text,
-          description: descriptionController.text,
+          title: titleController.text.trim(),
+          description: descriptionController.text.trim(),
           createdAt: startDate.value,
           dueDate: endDate.value,
           type: isPriorityTask.value ? 'Priority Task' : 'Daily Task',
-          todoItems: todoItems,
+          todoItems: todoItems.toList(),
           priority: isPriorityTask.value ? TaskPriority.high : TaskPriority.medium,
           progress: 0.0,
           isCompleted: false,
         );
 
         await _taskService.addTask(task, userId);
+        hideLoading();
         Get.back(result: true);
         showMessage('Task added successfully');
       }
-    });
+    } catch (e) {
+      hideLoading();
+      showError('Error adding task: $e');
+    }
   }
 
   @override
