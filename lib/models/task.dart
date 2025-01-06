@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_app/core/constants/app_colors.dart';
 
 enum TaskPriority { low, medium, high }
 
@@ -6,100 +8,121 @@ class Task {
   final String id;
   final String title;
   final String description;
-  final DateTime dueDate;
-  final TaskPriority priority;
-  final bool isCompleted;
-  final String? type;
-  final double progress;
-  final Color color;
-  final List<String> todoItems;
   final DateTime createdAt;
-  final DateTime? updatedAt;
+  final DateTime dueDate;
+  final String type;
+  final bool isCompleted;
+  final List<String> todoItems;
+  final Color color;
+  final TaskPriority priority;
+  final double progress;
 
   Task({
     required this.id,
     required this.title,
     required this.description,
+    required this.createdAt,
     required this.dueDate,
-    required this.priority,
+    required this.type,
     this.isCompleted = false,
-    this.type,
-    this.progress = 0.0,
-    this.color = Colors.blue,
     this.todoItems = const [],
-    DateTime? createdAt,
-    this.updatedAt,
-  }) : createdAt = createdAt ?? DateTime.now();
+    this.color = AppColors.primary,
+    this.priority = TaskPriority.medium,
+    this.progress = 0.0,
+  });
 
-  // Getter để tính số ngày còn lại
-  int get daysRemaining {
-    final now = DateTime.now();
-    final difference = dueDate.difference(now).inDays;
-    return difference < 0 ? 0 : difference;
+  factory Task.fromJson(Map<String, dynamic> json) {
+    return Task(
+      id: json['id'] as String,
+      title: json['title'] as String,
+      description: json['description'] as String,
+      createdAt: (json['createdAt'] as Timestamp).toDate(),
+      dueDate: (json['dueDate'] as Timestamp).toDate(),
+      type: json['type'] as String,
+      isCompleted: json['isCompleted'] as bool? ?? false,
+      todoItems: List<String>.from(json['todoItems'] ?? []),
+      color: Color(json['color'] as int? ?? AppColors.primary.value),
+      priority: TaskPriority.values[json['priority'] as int? ?? 1], // Default medium
+      progress: (json['progress'] as num?)?.toDouble() ?? 0.0,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'description': description,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'dueDate': Timestamp.fromDate(dueDate),
+      'type': type,
+      'isCompleted': isCompleted,
+      'todoItems': todoItems,
+      'color': color.value,
+      'priority': priority.index,
+      'progress': progress,
+    };
   }
 
   Task copyWith({
     String? id,
     String? title,
     String? description,
-    DateTime? dueDate,
-    TaskPriority? priority,
-    bool? isCompleted,
-    String? type,
-    double? progress,
-    Color? color,
-    List<String>? todoItems,
     DateTime? createdAt,
-    DateTime? updatedAt,
+    DateTime? dueDate,
+    String? type,
+    bool? isCompleted,
+    List<String>? todoItems,
+    Color? color,
+    TaskPriority? priority,
+    double? progress,
   }) {
     return Task(
       id: id ?? this.id,
       title: title ?? this.title,
       description: description ?? this.description,
-      dueDate: dueDate ?? this.dueDate,
-      priority: priority ?? this.priority,
-      isCompleted: isCompleted ?? this.isCompleted,
-      type: type ?? this.type,
-      progress: progress ?? this.progress,
-      color: color ?? this.color,
-      todoItems: todoItems ?? this.todoItems,
       createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
+      dueDate: dueDate ?? this.dueDate,
+      type: type ?? this.type,
+      isCompleted: isCompleted ?? this.isCompleted,
+      todoItems: todoItems ?? this.todoItems,
+      color: color ?? this.color,
+      priority: priority ?? this.priority,
+      progress: progress ?? this.progress,
     );
   }
 
-  Map<String, dynamic> toFirestore() {
-    return {
-      'title': title,
-      'description': description,
-      'dueDate': dueDate.toIso8601String(),
-      'priority': priority.index,
-      'isCompleted': isCompleted,
-      'type': type,
-      'progress': progress,
-      'color': color.value,
-      'todoItems': todoItems,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt?.toIso8601String(),
-    };
+  // Helper methods
+  Color get priorityColor {
+    switch (priority) {
+      case TaskPriority.high:
+        return Colors.red;
+      case TaskPriority.medium:
+        return Colors.orange;
+      case TaskPriority.low:
+        return Colors.green;
+    }
   }
 
-  factory Task.fromFirestore(String id, Map<String, dynamic> data) {
-    return Task(
-      id: id,
-      title: data['title'] as String,
-      description: data['description'] as String,
-      dueDate: DateTime.parse(data['dueDate'] as String),
-      priority: TaskPriority.values[data['priority'] as int],
-      isCompleted: data['isCompleted'] as bool,
-      type: data['type'] as String?,
-      progress: (data['progress'] as num).toDouble(),
-      color: Color(data['color'] as int),
-      todoItems: List<String>.from(data['todoItems'] as List),
-      createdAt: DateTime.parse(data['createdAt'] as String),
-      updatedAt: data['updatedAt'] != null 
-        ? DateTime.parse(data['updatedAt'] as String)
-        : null,
-    );
+  String get priorityText {
+    switch (priority) {
+      case TaskPriority.high:
+        return 'High Priority';
+      case TaskPriority.medium:
+        return 'Medium Priority';
+      case TaskPriority.low:
+        return 'Low Priority';
+    }
+  }
+
+  // Calculate days remaining
+  int get daysRemaining {
+    final now = DateTime.now();
+    return dueDate.difference(now).inDays;
+  }
+
+  // Calculate progress based on completed todo items
+  double calculateProgress() {
+    if (todoItems.isEmpty) return 0.0;
+    final completedItems = todoItems.where((item) => item.startsWith('✓')).length;
+    return completedItems / todoItems.length;
   }
 } 

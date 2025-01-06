@@ -13,6 +13,14 @@ class LoginController extends BaseController {
   final password = ''.obs;
   final isPasswordVisible = false.obs;
 
+  @override
+  void onInit() {
+    super.onInit();
+    // Lắng nghe sự thay đổi của TextEditingController
+    emailTEC.addListener(() => email.value = emailTEC.text);
+    passwordTEC.addListener(() => password.value = passwordTEC.text);
+  }
+
   void togglePasswordVisibility() {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
@@ -23,13 +31,26 @@ class LoginController extends BaseController {
       return;
     }
 
-    await handleError(() async {
-      await _authService.signInWithEmailAndPassword(
+    try {
+      showLoading();
+      final userCredential = await _authService.signInWithEmailAndPassword(
         email.value,
         password.value,
       );
+
+      // Kiểm tra xác thực email
+      if (userCredential?.user != null && !userCredential!.user!.emailVerified) {
+        hideLoading();
+        Get.offNamed('/verify-email', arguments: {'email': email.value});
+        return;
+      }
+
+      hideLoading();
       Get.offAllNamed('/home');
-    });
+    } catch (e) {
+      hideLoading();
+      showError(e.toString());
+    }
   }
 
   Future<void> loginWithGoogle() async {
@@ -45,5 +66,12 @@ class LoginController extends BaseController {
 
   void goToForgotPassword() {
     Get.toNamed('/forgot-password');
+  }
+
+  @override
+  void onClose() {
+    emailTEC.dispose();
+    passwordTEC.dispose();
+    super.onClose();
   }
 }

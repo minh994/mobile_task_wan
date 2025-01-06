@@ -18,6 +18,9 @@ dependencies:
   image_picker: ^1.1.2
   firebase_storage: ^11.7.7
   get: ^4.6.5
+  intl: ^0.17.0
+  date_picker_timeline: ^1.2.3
+  shared_preferences: ^2.2.2
 
 
 dev_dependencies:
@@ -34,4 +37,5 @@ flutter:
     - assets/google.png
     - assets/facebook.png
     - assets/twitter.png
+    - assets/verify_email.png
 

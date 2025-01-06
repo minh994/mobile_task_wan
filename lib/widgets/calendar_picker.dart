@@ -1,29 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import '../core/constants/app_colors.dart';
 
-class CalendarPicker extends StatefulWidget {
-  final DateTime? selectedDate;
+class CalendarPicker extends StatelessWidget {
+  final DateTime selectedDate;
   final Function(DateTime) onDateSelected;
+  final DateTime? firstDate;
+  final DateTime? lastDate;
 
   const CalendarPicker({
-    super.key,
-    this.selectedDate,
+    Key? key,
+    required this.selectedDate,
     required this.onDateSelected,
-  });
-
-  @override
-  State<CalendarPicker> createState() => _CalendarPickerState();
-}
-
-class _CalendarPickerState extends State<CalendarPicker> {
-  late DateTime _currentMonth;
-  late DateTime? _selectedDate;
-
-  @override
-  void initState() {
-    super.initState();
-    _currentMonth = widget.selectedDate ?? DateTime.now();
-    _selectedDate = widget.selectedDate;
-  }
+    this.firstDate,
+    this.lastDate,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +25,9 @@ class _CalendarPickerState extends State<CalendarPicker> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
             blurRadius: 10,
-            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -45,31 +36,23 @@ class _CalendarPickerState extends State<CalendarPicker> {
         children: [
           _buildHeader(),
           const SizedBox(height: 20),
-          _buildWeekDayLabels(),
-          const SizedBox(height: 8),
-          _buildCalendarGrid(),
+          _buildCalendar(),
         ],
       ),
     );
   }
 
   Widget _buildHeader() {
+    final month = DateFormat('MMMM, yyyy').format(selectedDate);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         IconButton(
           icon: const Icon(Icons.chevron_left),
-          onPressed: () {
-            setState(() {
-              _currentMonth = DateTime(
-                _currentMonth.year,
-                _currentMonth.month - 1,
-              );
-            });
-          },
+          onPressed: () => _onMonthChanged(-1),
         ),
         Text(
-          '${_getMonthName(_currentMonth.month)}, ${_currentMonth.year}',
+          month,
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -77,113 +60,119 @@ class _CalendarPickerState extends State<CalendarPicker> {
         ),
         IconButton(
           icon: const Icon(Icons.chevron_right),
-          onPressed: () {
-            setState(() {
-              _currentMonth = DateTime(
-                _currentMonth.year,
-                _currentMonth.month + 1,
-              );
-            });
-          },
+          onPressed: () => _onMonthChanged(1),
         ),
       ],
     );
   }
 
-  Widget _buildWeekDayLabels() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: const [
-        Text('Su', style: TextStyle(color: Colors.grey)),
-        Text('Mo', style: TextStyle(color: Colors.grey)),
-        Text('Tu', style: TextStyle(color: Colors.grey)),
-        Text('We', style: TextStyle(color: Colors.grey)),
-        Text('Th', style: TextStyle(color: Colors.grey)),
-        Text('Fr', style: TextStyle(color: Colors.grey)),
-        Text('Sa', style: TextStyle(color: Colors.grey)),
+  Widget _buildCalendar() {
+    return Column(
+      children: [
+        _buildWeekDays(),
+        const SizedBox(height: 8),
+        _buildDays(),
       ],
     );
   }
 
-  Widget _buildCalendarGrid() {
+  Widget _buildWeekDays() {
+    const weekDays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: weekDays
+          .map((day) => SizedBox(
+                width: 32,
+                child: Text(
+                  day,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 12,
+                  ),
+                ),
+              ))
+          .toList(),
+    );
+  }
+
+  Widget _buildDays() {
     final daysInMonth = DateTime(
-      _currentMonth.year,
-      _currentMonth.month + 1,
+      selectedDate.year,
+      selectedDate.month + 1,
       0,
     ).day;
 
     final firstDayOfMonth = DateTime(
-      _currentMonth.year,
-      _currentMonth.month,
+      selectedDate.year,
+      selectedDate.month,
       1,
     );
 
-    final firstWeekdayOfMonth = firstDayOfMonth.weekday;
-    final days = List<Widget>.filled(42, const SizedBox());
+    final firstWeekday = firstDayOfMonth.weekday;
+    final prevMonthDays = (firstWeekday + 6) % 7;
 
-    for (var i = 0; i < daysInMonth; i++) {
-      final date = DateTime(_currentMonth.year, _currentMonth.month, i + 1);
-      final index = firstWeekdayOfMonth + i - 1;
-      
-      days[index] = _DayCell(
-        date: date,
-        isSelected: _selectedDate?.day == date.day &&
-                   _selectedDate?.month == date.month &&
-                   _selectedDate?.year == date.year,
-        onTap: () {
-          setState(() => _selectedDate = date);
-          widget.onDateSelected(date);
-        },
-      );
-    }
-
-    return GridView.count(
+    return GridView.builder(
       shrinkWrap: true,
-      crossAxisCount: 7,
-      children: days,
-    );
-  }
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 7,
+        mainAxisSpacing: 8,
+        crossAxisSpacing: 8,
+      ),
+      itemCount: 42,
+      itemBuilder: (context, index) {
+        final day = index - prevMonthDays + 1;
+        if (day < 1 || day > daysInMonth) {
+          return const SizedBox();
+        }
 
-  String _getMonthName(int month) {
-    const months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-    return months[month - 1];
-  }
-}
+        final date = DateTime(selectedDate.year, selectedDate.month, day);
+        final isSelected = _isSameDay(date, selectedDate);
+        final isDisabled = _isDateDisabled(date);
 
-class _DayCell extends StatelessWidget {
-  final DateTime date;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _DayCell({
-    required this.date,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.all(2),
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF0066FF) : Colors.transparent,
-          shape: BoxShape.circle,
-        ),
-        child: Center(
-          child: Text(
-            '${date.day}',
-            style: TextStyle(
-              color: isSelected ? Colors.white : Colors.black,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+        return GestureDetector(
+          onTap: isDisabled ? null : () => onDateSelected(date),
+          child: Container(
+            decoration: BoxDecoration(
+              color: isSelected ? AppColors.primary : Colors.transparent,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Center(
+              child: Text(
+                day.toString(),
+                style: TextStyle(
+                  color: isSelected
+                      ? Colors.white
+                      : isDisabled
+                          ? Colors.grey[400]
+                          : Colors.black87,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                ),
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
+  }
+
+  void _onMonthChanged(int delta) {
+    final newDate = DateTime(
+      selectedDate.year,
+      selectedDate.month + delta,
+      selectedDate.day,
+    );
+    onDateSelected(newDate);
+  }
+
+  bool _isSameDay(DateTime a, DateTime b) {
+    return a.year == b.year && a.month == b.month && a.day == b.day;
+  }
+
+  bool _isDateDisabled(DateTime date) {
+    if (firstDate != null && date.isBefore(firstDate!)) return true;
+    if (lastDate != null && date.isAfter(lastDate!)) return true;
+    return false;
   }
 } 

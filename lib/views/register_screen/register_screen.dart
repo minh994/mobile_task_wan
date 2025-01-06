@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../core/base/base_view.dart';
 import '../../controllers/register_controller.dart';
-import 'package:get/get.dart';
-import 'widgets/register_form.dart';
+import '../../core/constants/app_colors.dart';
 
 class RegisterScreen extends BaseView<RegisterController> {
   const RegisterScreen({super.key});
@@ -10,27 +10,46 @@ class RegisterScreen extends BaseView<RegisterController> {
   @override
   Widget buildView(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Đăng ký'),
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.black,
-      ),
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildHeader(),
-                const SizedBox(height: 32),
-                const RegisterForm(),
-                const SizedBox(height: 16),
-                _buildLoginLink(),
-              ],
-            ),
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _buildBackButton(),
+              const SizedBox(height: 20),
+              _buildHeader(),
+              const SizedBox(height: 32),
+              _buildUsernameField(),
+              const SizedBox(height: 24),
+              _buildEmailField(),
+              const SizedBox(height: 24),
+              _buildPasswordField(),
+              const SizedBox(height: 24),
+              _buildConfirmPasswordField(),
+              const SizedBox(height: 32),
+              _buildRegisterButton(),
+              const SizedBox(height: 24),
+              _buildSocialRegister(),
+            ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBackButton() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.primary,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: controller.goToLogin,
         ),
       ),
     );
@@ -39,33 +58,213 @@ class RegisterScreen extends BaseView<RegisterController> {
   Widget _buildHeader() {
     return Column(
       children: [
-        Image.asset(
-          'assets/laravel_icon.png',
-          height: 100,
-        ),
-        const SizedBox(height: 16),
         const Text(
-          'Tạo tài khoản mới',
+          'TASK-WAN',
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
+            color: AppColors.primary,
           ),
-          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Management App',
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.grey[600],
+          ),
+        ),
+        const SizedBox(height: 32),
+        Text(
+          'Create your account',
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.grey[800],
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildLoginLink() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+  Widget _buildUsernameField() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: TextField(
+        onChanged: (value) => controller.username.value = value,
+        decoration: const InputDecoration(
+          hintText: 'Username',
+          prefixIcon: Icon(
+            Icons.person_outline,
+            color: AppColors.primary,
+          ),
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmailField() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: TextField(
+        onChanged: (value) => controller.email.value = value,
+        decoration: const InputDecoration(
+          hintText: 'Email',
+          prefixIcon: Icon(
+            Icons.email_outlined,
+            color: AppColors.primary,
+          ),
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return Obx(() {
+      return Container(
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: TextField(
+          onChanged: (value) => controller.password.value = value,
+          obscureText: !controller.isPasswordVisible.value,
+          decoration: InputDecoration(
+            hintText: 'Password',
+            prefixIcon: const Icon(
+              Icons.lock_outline,
+              color: AppColors.primary,
+            ),
+            suffixIcon: IconButton(
+              icon: Icon(
+                controller.isPasswordVisible.value
+                    ? Icons.visibility_off
+                    : Icons.visibility,
+                color: Colors.grey,
+              ),
+              onPressed: controller.togglePasswordVisibility,
+            ),
+            border: InputBorder.none,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          ),
+        ),
+      );
+    });
+  }
+
+  Widget _buildConfirmPasswordField() {
+    return Obx(() {
+      return Container(
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: TextField(
+          onChanged: (value) => controller.confirmPassword.value = value,
+          obscureText: !controller.isConfirmPasswordVisible.value,
+          decoration: InputDecoration(
+            hintText: 'Confirm Password',
+            prefixIcon: const Icon(
+              Icons.lock_outline,
+              color: AppColors.primary,
+            ),
+            suffixIcon: IconButton(
+              icon: Icon(
+                controller.isConfirmPasswordVisible.value
+                    ? Icons.visibility_off
+                    : Icons.visibility,
+                color: Colors.grey,
+              ),
+              onPressed: controller.toggleConfirmPasswordVisibility,
+            ),
+            border: InputBorder.none,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          ),
+        ),
+      );
+    });
+  }
+
+  Widget _buildRegisterButton() {
+    return SizedBox(
+      width: double.infinity,
+      height: 48,
+      child: ElevatedButton(
+        onPressed: controller.register,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.primary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        child: const Text(
+          'Register',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSocialRegister() {
+    return Column(
       children: [
-        const Text('Đã có tài khoản?'),
-        TextButton(
-          onPressed: controller.goToLogin,
-          child: const Text('Đăng nhập'),
+        Text(
+          'Or Register with',
+          style: TextStyle(
+            color: Colors.grey[600],
+            fontSize: 14,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildSocialButton(
+              'assets/google.png',
+              () => controller.registerWithGoogle(),
+            ),
+            const SizedBox(width: 24),
+            _buildSocialButton(
+              'assets/facebook.png',
+              () {},
+            ),
+            const SizedBox(width: 24),
+            _buildSocialButton(
+              'assets/twitter.png',
+              () {},
+            ),
+          ],
         ),
       ],
+    );
+  }
+
+  Widget _buildSocialButton(String asset, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        width: 50,
+        height: 50,
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey[300]!),
+        ),
+        child: Image.asset(asset),
+      ),
     );
   }
 }

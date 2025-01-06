@@ -5,6 +5,7 @@ import '../core/base/base_controller.dart';
 class RegisterController extends BaseController {
   final AuthService _authService = Get.find<AuthService>();
 
+  final username = ''.obs;
   final email = ''.obs;
   final password = ''.obs;
   final confirmPassword = ''.obs;
@@ -31,15 +32,26 @@ class RegisterController extends BaseController {
     }
 
     await handleError(() async {
-      await _authService.createUserWithEmailAndPassword(
+      final UserCredential = await _authService.createUserWithEmailAndPassword(
         email.value,
         password.value,
       );
-      Get.offAllNamed('/verify', arguments: {'email': email.value});
+      if (UserCredential != null) {
+        Get.offNamed('/verify-email', arguments: {'email': email.value});
+      } else {
+        showError('User not found');
+      }
     });
   }
 
   void goToLogin() {
     Get.back();
+  }
+
+  Future<void> registerWithGoogle() async {
+    await handleError(() async {
+      await _authService.signInWithGoogle();
+      Get.offAllNamed('/home');
+    });
   }
 }

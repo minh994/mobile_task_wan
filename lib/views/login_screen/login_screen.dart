@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_app/core/routes/app_router.dart';
+import 'package:get/get.dart';
 import '../../core/base/base_view.dart';
 import '../../controllers/login_controller.dart';
-import 'package:get/get.dart';
-import 'widgets/social_login_button.dart';
+import '../../core/constants/app_colors.dart';
 
 class LoginScreen extends BaseView<LoginController> {
   const LoginScreen({super.key});
@@ -11,22 +10,27 @@ class LoginScreen extends BaseView<LoginController> {
   @override
   Widget buildView(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildHeader(),
-                const SizedBox(height: 32),
-                _buildForm(),
-                const SizedBox(height: 24),
-                _buildSocialLogin(),
-                const SizedBox(height: 16),
-                _buildRegisterLink(),
-              ],
-            ),
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 60),
+              _buildHeader(),
+              const SizedBox(height: 40),
+              _buildEmailField(),
+              const SizedBox(height: 16),
+              _buildPasswordField(),
+              _buildForgotPassword(),
+              const SizedBox(height: 24),
+              _buildLoginButton(),
+              const SizedBox(height: 32),
+              _buildSocialLogin(),
+              const SizedBox(height: 32),
+              _buildSignUpLink(),
+            ],
           ),
         ),
       ),
@@ -34,139 +38,32 @@ class LoginScreen extends BaseView<LoginController> {
   }
 
   Widget _buildHeader() {
-    return const Column(
+    return Column(
       children: [
-        Text(
+        const Text(
           'TASK-WAN',
           style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF0066FF),
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            color: AppColors.primary,
           ),
         ),
-        SizedBox(height: 4),
+        const SizedBox(height: 8),
         Text(
           'Management App',
           style: TextStyle(
-            color: Color(0xFF9E9E9E),
-            fontSize: 14,
+            fontSize: 16,
+            color: Colors.grey[600],
           ),
         ),
-        SizedBox(height: 40),
-        // Login text
-        Text(
-          'Login to your account',
-          style: TextStyle(
-            fontSize: 14,
-            color: Color(0xFF424242),
-          ),
-        ),
-        SizedBox(height: 24),
-      ],
-    );
-  }
-
-  Widget _buildForm() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        _buildEmailField(),
-        const SizedBox(height: 16),
-        _buildPasswordField(),
-        const SizedBox(height: 8),
-        _buildForgotPassword(),
-        const SizedBox(height: 24),
-        _buildLoginButton(),
-        const SizedBox(height: 16),
-        _buildDivider(),
-      ],
-    );
-  }
-
-  Widget _buildPasswordField() {
-    return TextField(
-      controller: controller.passwordTEC,
-      obscureText: !controller.isPasswordVisible.value,
-      decoration: InputDecoration(
-        prefixIcon: Container(
-          padding: const EdgeInsets.all(12),
-          child: const Icon(Icons.lock_outline, color: Colors.grey),
-        ),
-        suffixIcon: IconButton(
-          icon: Icon(
-            controller.isPasswordVisible.value
-                ? Icons.visibility_off
-                : Icons.visibility,
-            color: Colors.grey,
-          ),
-          onPressed: () {
-            controller.togglePasswordVisibility();
-          },
-        ),
-        hintText: 'Password',
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEmailField() {
-    return TextField(
-      controller: controller.emailTEC,
-      decoration: InputDecoration(
-        prefixIcon: Container(
-          padding: const EdgeInsets.all(12),
-          child: const Icon(Icons.email_outlined, color: Colors.grey),
-        ),
-        hintText: 'Email',
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildForgotPassword() {
-    return TextButton(
-      onPressed: controller.goToForgotPassword,
-      child: const Text('Forgot Password?'),
-    );
-  }
-
-  Widget _buildLoginButton() {
-    return ElevatedButton(
-      onPressed: controller.login,
-      child: const Text('Login'),
-    );
-  }
-
-  Widget _buildDivider() {
-    return const Divider(
-      color: Colors.grey,
-      thickness: 1,
-    );
-  }
-
-  Widget _buildRegisterLink() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text(
-          "Don't have an account? ",
-          style: TextStyle(
-            color: Color(0xFF9E9E9E),
-            fontSize: 12,
-          ),
-        ),
-        GestureDetector(
-          onTap: () => Get.toNamed(AppRouter.register),
-          child: const Text(
-            'Sign Up',
+        const SizedBox(height: 32),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Đăng nhập vào tài khoản của bạn',
             style: TextStyle(
-              color: Color(0xFF0066FF),
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
+              fontSize: 16,
+              color: Colors.grey[800],
             ),
           ),
         ),
@@ -174,43 +71,175 @@ class LoginScreen extends BaseView<LoginController> {
     );
   }
 
+  Widget _buildEmailField() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: TextField(
+        controller: controller.emailTEC,
+        onChanged: (value) => controller.email.value = value,
+        decoration: const InputDecoration(
+          hintText: 'Email',
+          prefixIcon: Icon(
+            Icons.email_outlined,
+            color: AppColors.primary,
+          ),
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return Obx(() {
+      return Container(
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: TextField(
+          controller: controller.passwordTEC,
+          onChanged: (value) => controller.password.value = value,
+          obscureText: !controller.isPasswordVisible.value,
+          decoration: InputDecoration(
+            hintText: 'Mật khẩu',
+            prefixIcon: const Icon(
+              Icons.lock_outline,
+              color: AppColors.primary,
+            ),
+            suffixIcon: IconButton(
+              icon: Icon(
+                controller.isPasswordVisible.value
+                    ? Icons.visibility_off
+                    : Icons.visibility,
+                color: Colors.grey,
+              ),
+              onPressed: controller.togglePasswordVisibility,
+            ),
+            border: InputBorder.none,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          ),
+        ),
+      );
+    });
+  }
+
+  Widget _buildForgotPassword() {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: TextButton(
+        onPressed: controller.goToForgotPassword,
+        child: Text(
+          'Quên mật khẩu?',
+          style: TextStyle(
+            color: Colors.grey[600],
+            fontSize: 14,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoginButton() {
+    return SizedBox(
+      width: double.infinity,
+      height: 48,
+      child: ElevatedButton(
+        onPressed: controller.login,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.primary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        child: const Text(
+          'Đăng nhập',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildSocialLogin() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Column(
       children: [
-        _buildSocialButton(
-          'assets/google.png',
-          controller.loginWithGoogle,
+        Text(
+          'Hoặc đăng nhập với',
+          style: TextStyle(
+            color: Colors.grey[600],
+            fontSize: 14,
+          ),
         ),
-        const SizedBox(width: 32),
-        _buildSocialButton(
-          'assets/facebook.png',
-          () {},
-        ),
-        const SizedBox(width: 32),
-        _buildSocialButton(
-          'assets/twitter.png',
-          () {},
+        const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildSocialButton(
+              'assets/google.png',
+              controller.loginWithGoogle,
+            ),
+            const SizedBox(width: 24),
+            _buildSocialButton(
+              'assets/facebook.png',
+              () {},
+            ),
+            const SizedBox(width: 24),
+            _buildSocialButton(
+              'assets/twitter.png',
+              () {},
+            ),
+          ],
         ),
       ],
     );
   }
 
-  Widget _buildSocialButton(String imagePath, VoidCallback onTap) {
-    return GestureDetector(
+  Widget _buildSocialButton(String asset, VoidCallback onTap) {
+    return InkWell(
       onTap: onTap,
       child: Container(
+        width: 50,
+        height: 50,
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Colors.grey[300]!),
-          shape: BoxShape.circle,
         ),
-        child: Image.asset(
-          imagePath,
-          width: 24,
-          height: 24,
-        ),
+        child: Image.asset(asset),
       ),
+    );
+  }
+
+  Widget _buildSignUpLink() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          'Không có tài khoản? ',
+          style: TextStyle(
+            color: Colors.grey[600],
+            fontSize: 14,
+          ),
+        ),
+        GestureDetector(
+          onTap: controller.goToRegister,
+          child: const Text(
+            'Đăng ký',
+            style: TextStyle(
+              color: AppColors.primary,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

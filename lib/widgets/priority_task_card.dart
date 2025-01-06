@@ -12,7 +12,7 @@ class PriorityTaskCard extends StatelessWidget {
   });
 
   Widget _getTaskIcon() {
-    switch (task.type?.toLowerCase()) {
+    switch (task.type.toLowerCase()) {
       case 'ui design':
         return const Icon(Icons.brush_outlined, color: Colors.white, size: 24);
       case 'laravel':
@@ -25,7 +25,7 @@ class PriorityTaskCard extends StatelessWidget {
   }
 
   Color _getCardColor() {
-    switch (task.type?.toLowerCase()) {
+    switch (task.type.toLowerCase()) {
       case 'ui design':
         return const Color(0xFF0066FF);
       case 'laravel':
@@ -65,7 +65,7 @@ class PriorityTaskCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    '${task.daysRemaining} days',
+                    '${task.dueDate} days',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 12,

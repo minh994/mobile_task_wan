@@ -10,7 +10,7 @@ class AuthController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _authService.userStream.listen((User? user) {
+    _authService.currentUser.listen((User? user) {
       isAuthenticated.value = user != null;
     });
   }
