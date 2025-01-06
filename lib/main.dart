@@ -4,19 +4,17 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/routes/app_router.dart';
 import 'services/auth_service.dart';
-import 'services/user_service.dart';
 import 'services/task_service.dart';
 import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
   // Initialize core services first
-  Get.put<UserService>(UserService(), permanent: true);
   Get.put<AuthService>(AuthService(), permanent: true);
   Get.put<TaskService>(TaskService(), permanent: true);
 
@@ -29,8 +27,8 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   final String initialRoute;
-  
-  const MyApp({Key? key, required this.initialRoute}) : super(key: key);
+
+  const MyApp({super.key, required this.initialRoute});
 
   @override
   Widget build(BuildContext context) {

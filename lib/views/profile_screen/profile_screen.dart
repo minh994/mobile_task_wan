@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mobile_app/services/auth_service.dart';
 import '../../core/base/base_view.dart';
 import '../../controllers/profile_controller.dart';
 import '../../core/constants/app_colors.dart';
 
 class ProfileScreen extends BaseView<ProfileController> {
-  const ProfileScreen({super.key});
+  ProfileScreen({super.key});
+  final _authService = Get.find<AuthService>();
 
   @override
   Widget buildView(BuildContext context) {
@@ -71,14 +73,18 @@ class ProfileScreen extends BaseView<ProfileController> {
                   border: Border.all(color: Colors.white, width: 2),
                 ),
                 child: Obx(() => CircleAvatar(
-                  radius: 38,
-                  backgroundImage: controller.photoUrl.isNotEmpty
-                      ? NetworkImage(controller.photoUrl.value)
-                      : null,
-                  child: controller.photoUrl.isEmpty
-                      ? const Icon(Icons.person, size: 40, color: Colors.white)
-                      : null,
-                )),
+                      radius: 38,
+                      backgroundImage: _authService
+                              .currentUserModel.value!.photoUrl.isNotEmpty
+                          ? NetworkImage(
+                              _authService.currentUserModel.value!.photoUrl)
+                          : null,
+                      child:
+                          _authService.currentUserModel.value!.photoUrl.isEmpty
+                              ? const Icon(Icons.person,
+                                  size: 40, color: Colors.white)
+                              : null,
+                    )),
               ),
               const SizedBox(width: 20),
               Expanded(
@@ -86,21 +92,21 @@ class ProfileScreen extends BaseView<ProfileController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Obx(() => Text(
-                      controller.name.value,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    )),
+                          _authService.currentUserModel.value!.name,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        )),
                     const SizedBox(height: 4),
                     Obx(() => Text(
-                      controller.occupation.value,
-                      style: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 14,
-                      ),
-                    )),
+                          _authService.currentUserModel.value!.occupation,
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 14,
+                          ),
+                        )),
                   ],
                 ),
               ),
@@ -116,12 +122,12 @@ class ProfileScreen extends BaseView<ProfileController> {
               ),
               const SizedBox(width: 4),
               Obx(() => Text(
-                controller.location.value,
-                style: const TextStyle(
-                  color: Colors.white70,
-                  fontSize: 14,
-                ),
-              )),
+                    _authService.currentUserModel.value!.location,
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 14,
+                    ),
+                  )),
               const SizedBox(width: 20),
               Container(
                 padding: const EdgeInsets.symmetric(
@@ -141,12 +147,12 @@ class ProfileScreen extends BaseView<ProfileController> {
                     ),
                     const SizedBox(width: 4),
                     Obx(() => Text(
-                      '${controller.tasksCompleted} Task Completed',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
-                    )),
+                          '${controller.tasksCompleted} Task Completed',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                        )),
                   ],
                 ),
               ),
@@ -192,7 +198,7 @@ class ProfileScreen extends BaseView<ProfileController> {
   }
 
   Widget _buildMenuItem(
-    String title, 
+    String title,
     IconData icon, {
     required VoidCallback onTap,
     bool isLogout = false,
@@ -263,8 +269,10 @@ class ProfileScreen extends BaseView<ProfileController> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _buildNavItem(Icons.home_outlined, false, () => Get.offNamed('/home')),
-          _buildNavItem(Icons.calendar_today_outlined, false, () => Get.offNamed('/calendar')),
+          _buildNavItem(
+              Icons.home_outlined, false, () => Get.offNamed('/home')),
+          _buildNavItem(Icons.calendar_today_outlined, false,
+              () => Get.offNamed('/calendar')),
           _buildNavItem(Icons.person, true, null),
         ],
       ),
@@ -277,7 +285,9 @@ class ProfileScreen extends BaseView<ProfileController> {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.transparent,
+          color: isSelected
+              ? AppColors.primary.withOpacity(0.1)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Icon(
@@ -289,4 +299,3 @@ class ProfileScreen extends BaseView<ProfileController> {
     );
   }
 }
-

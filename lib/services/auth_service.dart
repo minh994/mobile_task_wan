@@ -1,21 +1,67 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:mobile_app/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService extends GetxService {
   final _auth = FirebaseAuth.instance;
+  final _db = FirebaseFirestore.instance;
   final _googleSignIn = GoogleSignIn();
   final currentUser = Rxn<User>();
   final isLoggedIn = false.obs;
+  final currentUserModel = Rxn<UserModel>();
+  StreamSubscription? _userSubscription;
 
   @override
   void onInit() {
     super.onInit();
     _auth.authStateChanges().listen((User? user) {
       currentUser.value = user;
+      _listenToUserProfile(currentUser.value!.uid);
       print('Auth state changed: ${user?.email}');
     });
+  }
+
+  void _listenToUserProfile(String userId) {
+    _userSubscription?.cancel();
+    _userSubscription = _db.collection('users').doc(userId).snapshots().listen(
+      (doc) {
+        if (doc.exists && doc.data() != null) {
+          currentUserModel.value = UserModel.fromFirestore(
+            doc.id,
+            doc.data() as Map<String, dynamic>,
+          );
+        } else {
+          currentUser.value = null;
+        }
+      },
+      onError: (error) {
+        print('Error listening to user profile: $error');
+      },
+    );
+  }
+
+  Future<void> updateUser(String userId, Map<String, dynamic> data) async {
+    try {
+      await _db.collection('users').doc(userId).set(
+            data,
+            SetOptions(merge: true),
+          );
+      _listenToUserProfile(userId);
+    } catch (e) {
+      print('Error updating user: $e');
+      throw Exception('Không thể cập nhật thông tin người dùng: $e');
+    }
+  }
+
+  @override
+  void onClose() {
+    _userSubscription?.cancel();
+    super.onClose();
   }
 
   // Kiểm tra auth state
@@ -94,7 +140,7 @@ class AuthService extends GetxService {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) return null;
 
-      final GoogleSignInAuthentication googleAuth = 
+      final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
@@ -120,6 +166,9 @@ class AuthService extends GetxService {
       await _updateLoginStatus(false);
       currentUser.value = null;
       isLoggedIn.value = false;
+      SharedPreferences.getInstance().then((prefs) {
+        prefs.clear();
+      });
     } catch (e) {
       rethrow;
     }
