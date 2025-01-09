@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import '../../core/base/base_view.dart';
 import '../../controllers/verify_email_controller.dart';
 import '../../core/constants/app_colors.dart';
-
+import '../../core/translations/app_translations.dart';
 class VerifyEmailScreen extends BaseView<VerifyEmailController> {
   const VerifyEmailScreen({super.key});
 

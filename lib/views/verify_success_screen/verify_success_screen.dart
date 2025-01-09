@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../core/constants/app_colors.dart';
-
+import '../../core/translations/app_translations.dart';
 class VerifySuccessScreen extends StatelessWidget {
   const VerifySuccessScreen({super.key});
 
@@ -43,7 +43,7 @@ class VerifySuccessScreen extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          'Management App',
+          'Management App'.tr,
           style: TextStyle(
             fontSize: 16,
             color: Colors.grey[600],
@@ -51,7 +51,7 @@ class VerifySuccessScreen extends StatelessWidget {
         ),
         const SizedBox(height: 32),
         const Text(
-          'Xác thực tài khoản',
+          'Verify Account',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -69,10 +69,11 @@ class VerifySuccessScreen extends StatelessWidget {
   }
 
   Widget _buildSuccessMessage() {
-    return const Text(
-      'Tài khoản của bạn đã được\nXác minh thành công!',
+    return Text(
+      'Your account has been\nVerified Successfully!'.tr,
       textAlign: TextAlign.center,
       style: TextStyle(
+        color: Colors.black87,
         fontSize: 20,
         fontWeight: FontWeight.bold,
       ),
@@ -93,10 +94,11 @@ class VerifySuccessScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        child: const Text(
-          'Vào trang chủ',
+        child: Text(
+          'Go to Home'.tr,
           style: TextStyle(
             fontSize: 16,
+            color: Colors.white,
             fontWeight: FontWeight.w600,
           ),
         ),

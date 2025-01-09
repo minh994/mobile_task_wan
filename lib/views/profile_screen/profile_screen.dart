@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../core/base/base_view.dart';
 import '../../controllers/profile_controller.dart';
 import '../../core/constants/app_colors.dart';
+import 'dart:io';
 
 class ProfileScreen extends BaseView<ProfileController> {
   const ProfileScreen({super.key});
@@ -43,10 +44,10 @@ class ProfileScreen extends BaseView<ProfileController> {
   }
 
   Widget _buildHeader() {
-    return const Padding(
-      padding: EdgeInsets.all(20),
+    return Padding(
+      padding: const EdgeInsets.all(20),
       child: Text(
-        'Profile',
+        'Profile'.tr,
         style: TextStyle(
           color: Colors.white,
           fontSize: 24,
@@ -71,12 +72,16 @@ class ProfileScreen extends BaseView<ProfileController> {
                   border: Border.all(color: Colors.white, width: 2),
                 ),
                 child: Obx(() => CircleAvatar(
-                  radius: 38,
+                  backgroundColor: Colors.grey[100],
                   backgroundImage: controller.photoUrl.isNotEmpty
-                      ? NetworkImage(controller.photoUrl.value)
+                      ? _getImageProvider(controller.photoUrl.value)
                       : null,
                   child: controller.photoUrl.isEmpty
-                      ? const Icon(Icons.person, size: 40, color: Colors.white)
+                      ? Icon(
+                          Icons.person_rounded,
+                          size: 40,
+                          color: Colors.grey[400],
+                        )
                       : null,
                 )),
               ),
@@ -141,7 +146,7 @@ class ProfileScreen extends BaseView<ProfileController> {
                     ),
                     const SizedBox(width: 4),
                     Obx(() => Text(
-                      '${controller.tasksCompleted} Task Completed',
+                      '${controller.tasksCompleted.value} ${'tasks_completed'.tr}',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 12,
@@ -161,28 +166,28 @@ class ProfileScreen extends BaseView<ProfileController> {
     return Column(
       children: [
         _buildMenuItem(
-          'My Profile',
+          'my_profile'.tr,
           Icons.person_outline,
           onTap: controller.goToMyProfile,
         ),
         _buildMenuItem(
-          'Statistic',
-          Icons.bar_chart_outlined,
+          'statistics'.tr,
+          Icons.bar_chart,
           onTap: controller.goToStatistics,
         ),
         _buildMenuItem(
-          'Location',
+          'location'.tr,
           Icons.location_on_outlined,
           onTap: controller.goToLocation,
         ),
         _buildMenuItem(
-          'Settings',
+          'settings'.tr,
           Icons.settings_outlined,
           onTap: controller.goToSettings,
           showBadge: true,
         ),
         _buildMenuItem(
-          'Logout',
+          'logout'.tr,
           Icons.logout,
           onTap: controller.logout,
           isLogout: true,
@@ -287,6 +292,13 @@ class ProfileScreen extends BaseView<ProfileController> {
         ),
       ),
     );
+  }
+
+  ImageProvider _getImageProvider(String url) {
+    if (url.startsWith('http')) {
+      return NetworkImage(url);
+    }
+    return FileImage(File(url));
   }
 }
 

@@ -67,7 +67,7 @@ class HomeScreen extends BaseView<HomeController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Chào mừng ${controller.userName}',
+              'Welcome ${controller.userName}'.tr,
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -75,7 +75,7 @@ class HomeScreen extends BaseView<HomeController> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Hãy có một ngày tốt lành!',
+              'Have a good day!'.tr,
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey[600],
@@ -92,9 +92,9 @@ class HomeScreen extends BaseView<HomeController> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              'Priority Task',
-              style: TextStyle(
+            Text(
+              'Priority Task'.tr,
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -102,7 +102,7 @@ class HomeScreen extends BaseView<HomeController> {
             TextButton(
               onPressed: () => Get.toNamed('/add-task'),
               child: Text(
-                'Add New',
+                'Add New'.tr,
                 style: TextStyle(
                   color: AppColors.primary,
                   fontWeight: FontWeight.w600,
@@ -127,7 +127,7 @@ class HomeScreen extends BaseView<HomeController> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'No priority tasks',
+                      'No priority tasks'.tr,
                       style: TextStyle(
                         color: Colors.grey[600],
                         fontSize: 16,
@@ -204,8 +204,8 @@ class HomeScreen extends BaseView<HomeController> {
                   ),
                   child: Text(
                     isOverdue 
-                        ? 'Overdue' 
-                        : '$daysLeft days left',
+                        ? 'Overdue'.tr 
+                        : '$daysLeft days left'.tr,
                     style: TextStyle(
                       color: isOverdue ? Colors.red[100] : Colors.white,
                       fontSize: 12,
@@ -233,8 +233,8 @@ class HomeScreen extends BaseView<HomeController> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Progress',
+                    Text(
+                      'Progress'.tr,
                       style: TextStyle(
                         color: Colors.white70,
                         fontSize: 12,
@@ -276,9 +276,9 @@ class HomeScreen extends BaseView<HomeController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Daily Task',
-          style: TextStyle(
+        Text(
+          'Daily Task'.tr,
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
@@ -286,8 +286,8 @@ class HomeScreen extends BaseView<HomeController> {
         const SizedBox(height: 16),
         Obx(() {
           if (controller.dailyTasks.isEmpty) {
-            return const Center(
-              child: Text('Không có công việc hàng ngày'),
+            return Center(
+              child: Text('No daily tasks'.tr),
             );
           }
           return ListView.builder(

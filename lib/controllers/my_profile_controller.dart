@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:mobile_app/core/constants/app_colors.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:mobile_app/controllers/profile_controller.dart';
 import '../core/base/base_controller.dart';
 import '../services/auth_service.dart';
 import '../services/user_service.dart';
-import 'package:image_picker/image_picker.dart';
-import '../core/routes/app_router.dart';
+import 'package:intl/intl.dart';
 
 class MyProfileController extends BaseController {
   final _authService = Get.find<AuthService>();
@@ -20,140 +19,75 @@ class MyProfileController extends BaseController {
   final dateOfBirth = DateTime.now().obs;
   final photoUrl = ''.obs;
 
-  // Ngày tạm thời được chọn trong calendar
-  final tempSelectedDate = DateTime.now().obs;
-
   String get formattedDate => 
       DateFormat('MMM dd, yyyy').format(dateOfBirth.value);
 
   @override
   void onInit() {
     super.onInit();
-    tempSelectedDate.value = dateOfBirth.value;
-    _checkAuth();
     loadUserData();
-  }
-
-  Future<void> _checkAuth() async {
-    if (!_authService.isAuthenticated) {
-      Get.offAllNamed(AppRouter.login);
-      return;
-    }
-    
-    final isValid = await _authService.validateToken();
-    if (!isValid) {
-      showError('Phiên đăng nhập đã hết hạn');
-      Get.offAllNamed(AppRouter.login);
-    }
   }
 
   Future<void> loadUserData() async {
     try {
-      print('Loading user data...');
       showLoading();
-      final userId = _authService.currentUser.value?.uid;
-      if (userId != null) {
-        await _userService.loadUser(userId);
-        final user = _userService.currentUser.value;
-        if (user != null) {
-          nameController.text = user.name;
-          professionController.text = user.occupation;
-          emailController.text = user.email;
-          photoUrl.value = user.photoUrl;
-          print('User data loaded successfully');
+      final currentUser = _authService.currentUser.value;
+      if (currentUser != null) {
+        // Load data from Firebase Auth
+        nameController.text = currentUser.displayName ?? '';
+        emailController.text = currentUser.email ?? '';
+        photoUrl.value = currentUser.photoURL ?? '';
+
+        // Load additional data from Firestore
+        await _userService.loadUser(currentUser.uid);
+        final userData = _userService.currentUser.value;
+        if (userData != null) {
+          if (nameController.text.isEmpty) {
+            nameController.text = userData.name;
+          }
+          professionController.text = userData.occupation;
+          if (userData.photoUrl.isNotEmpty) {
+            photoUrl.value = userData.photoUrl;
+          }
         }
       }
       hideLoading();
     } catch (e) {
       hideLoading();
-      print('Error loading user data: $e');
       showError('Error loading user data: $e');
     }
   }
 
-  // Chọn ngày tạm thời
-  void selectDate(DateTime date) {
-    tempSelectedDate.value = date;
-  }
-
-  // Xác nhận chọn ngày
-  void confirmDateSelection() {
-    dateOfBirth.value = tempSelectedDate.value;
-  }
-
-  // Hiển thị dialog chỉnh sửa
-  void _showEditDialog(String title, TextEditingController controller) {
-    final tempController = TextEditingController(text: controller.text);
-    
-    Get.dialog(
-      Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Edit $title',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: tempController,
-                decoration: InputDecoration(
-                  hintText: 'Enter $title',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () => Get.back(),
-                    child: const Text('Cancel'),
-                  ),
-                  const SizedBox(width: 8),
-                  ElevatedButton(
-                    onPressed: () {
-                      controller.text = tempController.text;
-                      Get.back();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text('Save'),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Future<void> pickImage() async {
     try {
-      final pickedFile = await _imagePicker.pickImage(
+      final image = await _imagePicker.pickImage(
         source: ImageSource.gallery,
+        imageQuality: 70,
       );
+      
+      if (image != null) {
+        showLoading();
+        final userId = _authService.currentUser.value?.uid;
+        if (userId != null) {
+          // Cập nhật URL ảnh trong database
+          await _userService.updateUser(userId, {
+            'photoUrl': image.path, // Lưu đường dẫn ảnh local
+          });
 
-      if (pickedFile != null) {
-        // TODO: Upload image to storage and update photoUrl
-        showMessage('Image picked successfully');
+          // Cập nhật Firebase Auth
+          await _authService.currentUser.value?.updatePhotoURL(image.path);
+          
+          // Cập nhật local state
+          photoUrl.value = image.path;
+          
+          // Cập nhật lại ProfileController
+          final profileController = Get.find<ProfileController>();
+          profileController.photoUrl.value = image.path;
+        }
+        hideLoading();
       }
     } catch (e) {
+      hideLoading();
       showError('Error picking image: $e');
     }
   }
@@ -163,11 +97,24 @@ class MyProfileController extends BaseController {
       showLoading();
       final userId = _authService.currentUser.value?.uid;
       if (userId != null) {
-        await _userService.updateUser(userId, {
+        // Cập nhật displayName trong Firebase Auth
+        await _authService.currentUser.value?.updateDisplayName(nameController.text);
+        
+        // Cập nhật database
+        final userData = {
           'name': nameController.text,
           'occupation': professionController.text,
           'photoUrl': photoUrl.value,
-        });
+        };
+        
+        await _userService.updateUser(userId, userData);
+
+        // Cập nhật lại ProfileController
+        final profileController = Get.find<ProfileController>();
+        profileController.name.value = nameController.text;
+        profileController.occupation.value = professionController.text;
+        profileController.photoUrl.value = photoUrl.value;
+
         hideLoading();
         Get.back();
         showMessage('Profile updated successfully');

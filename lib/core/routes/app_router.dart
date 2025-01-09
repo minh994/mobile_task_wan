@@ -22,6 +22,18 @@ import 'package:mobile_app/views/profile_screen/profile_binding.dart';
 import 'package:mobile_app/views/my_profile_screen/my_profile_screen.dart';
 import 'package:mobile_app/views/my_profile_screen/my_profile_binding.dart';
 import 'package:mobile_app/services/auth_service.dart';
+import 'package:mobile_app/views/statistic_screen/statistic_screen.dart';
+import 'package:mobile_app/views/statistic_screen/statistic_binding.dart';
+import 'package:mobile_app/views/settings_screen/settings_screen.dart';
+import 'package:mobile_app/views/settings_screen/settings_binding.dart';
+import 'package:mobile_app/views/location_screen/location_screen.dart';
+import 'package:mobile_app/views/location_screen/location_binding.dart';
+import 'package:mobile_app/views/notification_screen/notification_screen.dart';
+import 'package:mobile_app/views/notification_screen/notification_binding.dart';
+import 'package:mobile_app/views/security_screen/security_screen.dart';
+import 'package:mobile_app/views/security_screen/security_binding.dart';
+import 'package:mobile_app/views/language_screen/language_screen.dart';
+import 'package:mobile_app/views/language_screen/language_binding.dart';
 
 class AuthMiddleware extends GetMiddleware {
   // Kiểm tra và chuyển hướng các route cần xác thực
@@ -53,6 +65,15 @@ class AppRouter {
   static const profile = '/profile';
   static const priorityTask = '/priority-task';
   static const myProfile = '/my-profile';
+  static const statistics = '/statistics';
+  static const settings = '/settings';
+  static const notifications = '/notifications';
+  static const security = '/security';
+  static const help = '/help';
+  static const about = '/about';
+  static const location = '/location';
+  static const notification = '/notification';
+  static const language = '/language';
   
 
   static final routes = [
@@ -122,6 +143,48 @@ class AppRouter {
       transition: Transition.rightToLeft,
       transitionDuration: const Duration(milliseconds: 200),
       middlewares: [AuthMiddleware()],
+    ),
+    GetPage(
+      name: statistics,
+      page: () => const StatisticScreen(),
+      binding: StatisticBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: settings,
+      page: () => const SettingsScreen(),
+      binding: SettingsBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: location,
+      page: () => const LocationScreen(),
+      binding: LocationBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: notifications,
+      page: () => const NotificationScreen(),
+      binding: NotificationBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: security,
+      page: () => const SecurityScreen(),
+      binding: SecurityBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: notification,
+      page: () => const NotificationScreen(),
+      binding: NotificationBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: language,
+      page: () => const LanguageScreen(),
+      binding: LanguageBinding(),
+      transition: Transition.rightToLeft,
     ),
   ];
 }

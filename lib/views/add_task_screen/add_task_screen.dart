@@ -14,8 +14,8 @@ class AddTaskScreen extends BaseView<AddTaskController> {
       appBar: AppBar(
         backgroundColor: AppColors.primary,
         elevation: 0,
-        title: const Text(
-          'Add Task',
+        title: Text(
+          'Add Task'.tr,
           style: TextStyle(color: Colors.white),
         ),
         leading: IconButton(
@@ -25,8 +25,8 @@ class AddTaskScreen extends BaseView<AddTaskController> {
         actions: [
           TextButton(
             onPressed: controller.saveTask,
-            child: const Text(
-              'Save',
+            child: Text(
+              'Save'.tr,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16,
@@ -86,8 +86,8 @@ class AddTaskScreen extends BaseView<AddTaskController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Start',
+              Text(
+                'Start'.tr,
                 style: TextStyle(
                   color: Colors.white70,
                   fontSize: 14,
@@ -122,8 +122,8 @@ class AddTaskScreen extends BaseView<AddTaskController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Ends',
+              Text(
+                'Ends'.tr,
                 style: TextStyle(
                   color: Colors.white70,
                   fontSize: 14,
@@ -161,8 +161,8 @@ class AddTaskScreen extends BaseView<AddTaskController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Title',
+        Text(
+          'Title'.tr,
           style: TextStyle(
             color: Colors.white70,
             fontSize: 14,
@@ -191,8 +191,8 @@ class AddTaskScreen extends BaseView<AddTaskController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Category',
+        Text(
+          'Category'.tr,
           style: TextStyle(
             color: Colors.white70,
             fontSize: 14,
@@ -240,8 +240,8 @@ class AddTaskScreen extends BaseView<AddTaskController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Description',
+        Text(
+          'Description'.tr,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -271,8 +271,8 @@ class AddTaskScreen extends BaseView<AddTaskController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'To do List',
+        Text(
+          'To do List'.tr,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -289,8 +289,8 @@ class AddTaskScreen extends BaseView<AddTaskController> {
                 ),
                 child: TextField(
                   controller: controller.todoController,
-                  decoration: const InputDecoration(
-                    hintText: 'Add new task',
+                  decoration: InputDecoration(
+                    hintText: 'Add new task'.tr,
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.all(12),
                   ),

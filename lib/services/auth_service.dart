@@ -156,4 +156,57 @@ class AuthService extends GetxService {
       throw Exception('Could not send verification email: $e');
     }
   }
+
+  Future<void> reauthenticate(String currentPassword) async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null || user.email == null) {
+        throw Exception('Không tìm thấy thông tin người dùng');
+      }
+
+      // Create credential
+      final credential = EmailAuthProvider.credential(
+        email: user.email!,
+        password: currentPassword,
+      );
+
+      // Reauthenticate
+      await user.reauthenticateWithCredential(credential);
+    } catch (e) {
+      if (e is FirebaseAuthException) {
+        switch (e.code) {
+          case 'wrong-password':
+            throw Exception('Mật khẩu hiện tại không đúng');
+          case 'too-many-requests':
+            throw Exception('Quá nhiều yêu cầu. Vui lòng thử lại sau');
+          default:
+            throw Exception('Lỗi xác thực: ${e.message}');
+        }
+      }
+      throw Exception('Lỗi xác thực: ${e.toString()}');
+    }
+  }
+
+  Future<void> changePassword(String newPassword) async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) {
+        throw Exception('Không tìm thấy thông tin người dùng');
+      }
+
+      await user.updatePassword(newPassword);
+    } catch (e) {
+      if (e is FirebaseAuthException) {
+        switch (e.code) {
+          case 'weak-password':
+            throw Exception('Mật khẩu mới quá yếu');
+          case 'requires-recent-login':
+            throw Exception('Cần đăng nhập lại để thực hiện thao tác này');
+          default:
+            throw Exception('Lỗi đổi mật khẩu: ${e.message}');
+        }
+      }
+      throw Exception('Lỗi đổi mật khẩu: ${e.toString()}');
+    }
+  }
 }

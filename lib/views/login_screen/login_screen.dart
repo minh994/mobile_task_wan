@@ -50,7 +50,7 @@ class LoginScreen extends BaseView<LoginController> {
         ),
         const SizedBox(height: 8),
         Text(
-          'Management App',
+          'Task Management App'.tr,
           style: TextStyle(
             fontSize: 16,
             color: Colors.grey[600],
@@ -60,7 +60,7 @@ class LoginScreen extends BaseView<LoginController> {
         Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            'Đăng nhập vào tài khoản của bạn',
+            'Login to your account'.tr,
             style: TextStyle(
               fontSize: 16,
               color: Colors.grey[800],
@@ -105,7 +105,7 @@ class LoginScreen extends BaseView<LoginController> {
           onChanged: (value) => controller.password.value = value,
           obscureText: !controller.isPasswordVisible.value,
           decoration: InputDecoration(
-            hintText: 'Mật khẩu',
+            hintText: 'Password'.tr,
             prefixIcon: const Icon(
               Icons.lock_outline,
               color: AppColors.primary,
@@ -133,7 +133,7 @@ class LoginScreen extends BaseView<LoginController> {
       child: TextButton(
         onPressed: controller.goToForgotPassword,
         child: Text(
-          'Quên mật khẩu?',
+          'Forgot password?'.tr,
           style: TextStyle(
             color: Colors.grey[600],
             fontSize: 14,
@@ -155,10 +155,11 @@ class LoginScreen extends BaseView<LoginController> {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        child: const Text(
-          'Đăng nhập',
+        child: Text(
+          'Login'.tr,
           style: TextStyle(
             fontSize: 16,
+            color: Colors.white,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -170,7 +171,7 @@ class LoginScreen extends BaseView<LoginController> {
     return Column(
       children: [
         Text(
-          'Hoặc đăng nhập với',
+          'Or login with'.tr,
           style: TextStyle(
             color: Colors.grey[600],
             fontSize: 14,
@@ -222,7 +223,7 @@ class LoginScreen extends BaseView<LoginController> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Không có tài khoản? ',
+          'Don\'t have an account? '.tr,
           style: TextStyle(
             color: Colors.grey[600],
             fontSize: 14,
@@ -230,8 +231,8 @@ class LoginScreen extends BaseView<LoginController> {
         ),
         GestureDetector(
           onTap: controller.goToRegister,
-          child: const Text(
-            'Đăng ký',
+          child: Text(
+            'Register'.tr,
             style: TextStyle(
               color: AppColors.primary,
               fontSize: 14,

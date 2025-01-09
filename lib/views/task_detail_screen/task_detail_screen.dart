@@ -102,7 +102,7 @@ class TaskDetailScreen extends BaseView<TaskDetailController> {
       children: [
         Expanded(
           child: _buildTimeBox(
-            'Start',
+            'Start'.tr,
             DateFormat('dd MMM yyyy').format(controller.task.value.createdAt),
             '',
             '',
@@ -111,7 +111,7 @@ class TaskDetailScreen extends BaseView<TaskDetailController> {
         const SizedBox(width: 20),
         Expanded(
           child: _buildTimeBox(
-            'End',
+            'End'.tr,
             DateFormat('dd MMM yyyy').format(controller.task.value.dueDate),
             '',
             '',
@@ -178,9 +178,9 @@ class TaskDetailScreen extends BaseView<TaskDetailController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Description',
-          style: TextStyle(
+        Text(
+          'Description'.tr,
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
@@ -201,9 +201,9 @@ class TaskDetailScreen extends BaseView<TaskDetailController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Progress',
-          style: TextStyle(
+        Text(
+          'Progress'.tr,
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
@@ -232,9 +232,9 @@ class TaskDetailScreen extends BaseView<TaskDetailController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Todo List',
-          style: TextStyle(
+        Text(
+          'Todo List'.tr,
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),

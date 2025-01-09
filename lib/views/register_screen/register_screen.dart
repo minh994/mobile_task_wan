@@ -58,9 +58,9 @@ class RegisterScreen extends BaseView<RegisterController> {
   Widget _buildHeader() {
     return Column(
       children: [
-        const Text(
-          'TASK-WAN',
-          style: TextStyle(
+        Text(
+          'task_wan'.tr,
+          style: const TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
             color: AppColors.primary,
@@ -68,7 +68,7 @@ class RegisterScreen extends BaseView<RegisterController> {
         ),
         const SizedBox(height: 8),
         Text(
-          'Management App',
+          'management_app'.tr,
           style: TextStyle(
             fontSize: 16,
             color: Colors.grey[600],
@@ -76,7 +76,7 @@ class RegisterScreen extends BaseView<RegisterController> {
         ),
         const SizedBox(height: 32),
         Text(
-          'Create your account',
+          'create_account'.tr,
           style: TextStyle(
             fontSize: 16,
             color: Colors.grey[800],
@@ -94,8 +94,8 @@ class RegisterScreen extends BaseView<RegisterController> {
       ),
       child: TextField(
         onChanged: (value) => controller.username.value = value,
-        decoration: const InputDecoration(
-          hintText: 'Username',
+        decoration: InputDecoration(
+          hintText: 'username'.tr,
           prefixIcon: Icon(
             Icons.person_outline,
             color: AppColors.primary,
@@ -115,8 +115,8 @@ class RegisterScreen extends BaseView<RegisterController> {
       ),
       child: TextField(
         onChanged: (value) => controller.email.value = value,
-        decoration: const InputDecoration(
-          hintText: 'Email',
+        decoration: InputDecoration(
+          hintText: 'Email'.tr,
           prefixIcon: Icon(
             Icons.email_outlined,
             color: AppColors.primary,
@@ -139,7 +139,7 @@ class RegisterScreen extends BaseView<RegisterController> {
           onChanged: (value) => controller.password.value = value,
           obscureText: !controller.isPasswordVisible.value,
           decoration: InputDecoration(
-            hintText: 'Password',
+            hintText: 'Password'.tr,
             prefixIcon: const Icon(
               Icons.lock_outline,
               color: AppColors.primary,
@@ -172,7 +172,7 @@ class RegisterScreen extends BaseView<RegisterController> {
           onChanged: (value) => controller.confirmPassword.value = value,
           obscureText: !controller.isConfirmPasswordVisible.value,
           decoration: InputDecoration(
-            hintText: 'Confirm Password',
+            hintText: 'Confirm Password'.tr,
             prefixIcon: const Icon(
               Icons.lock_outline,
               color: AppColors.primary,
@@ -206,10 +206,11 @@ class RegisterScreen extends BaseView<RegisterController> {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        child: const Text(
-          'Register',
-          style: TextStyle(
+        child: Text(
+          'register'.tr,
+          style: const TextStyle(
             fontSize: 16,
+            color: Colors.white,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -221,7 +222,7 @@ class RegisterScreen extends BaseView<RegisterController> {
     return Column(
       children: [
         Text(
-          'Or Register with',
+          'or_register_with'.tr,
           style: TextStyle(
             color: Colors.grey[600],
             fontSize: 14,

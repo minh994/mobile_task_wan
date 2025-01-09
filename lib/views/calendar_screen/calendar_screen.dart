@@ -70,12 +70,12 @@ class CalendarScreen extends BaseView<CalendarController> {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
-                children: const [
-                  Icon(Icons.add, color: Colors.white, size: 20),
-                  SizedBox(width: 4),
+                children: [
+                  const Icon(Icons.add, color: Colors.white, size: 20),
+                  const SizedBox(width: 4),
                   Text(
-                    'Add Task',
-                    style: TextStyle(
+                    'add_task'.tr,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -129,7 +129,7 @@ class CalendarScreen extends BaseView<CalendarController> {
   Widget _buildWeekDayHeaders() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      children: ['Mon'.tr, 'Tue'.tr, 'Wed'.tr, 'Thu'.tr, 'Fri'.tr, 'Sat'.tr, 'Sun'.tr]
           .map((day) => SizedBox(
                 width: 40,
                 child: Text(
@@ -206,11 +206,11 @@ class CalendarScreen extends BaseView<CalendarController> {
       child: Row(
         children: [
           Expanded(
-            child: _buildTab('Priority Task', true),
+            child: _buildTab('Priority Task'.tr, true),
           ),
           const SizedBox(width: 16),
           Expanded(
-            child: _buildTab('Daily Task', false),
+            child: _buildTab('Daily Task'.tr, false),
           ),
         ],
       ),
@@ -249,7 +249,7 @@ class CalendarScreen extends BaseView<CalendarController> {
   Widget _buildTaskList(bool isPriority) {
     return Obx(() {
       final tasks = controller.tasks.where((task) => 
-        isPriority ? task.type == 'Priority Task' : task.type == 'Daily Task'
+        isPriority ? task.type == 'Priority Task'.tr : task.type == 'Daily Task'.tr
       ).toList();
 
       if (tasks.isEmpty) {
@@ -264,7 +264,7 @@ class CalendarScreen extends BaseView<CalendarController> {
               ),
               const SizedBox(height: 16),
               Text(
-                'No ${isPriority ? 'priority' : 'daily'} tasks',
+                'No ${isPriority ? 'priority'.tr : 'daily'.tr} tasks'.tr,
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.grey[600],

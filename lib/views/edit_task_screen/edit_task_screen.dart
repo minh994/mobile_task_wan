@@ -62,8 +62,8 @@ class EditTaskScreen extends BaseView<EditTaskController> {
             ),
           ),
           const SizedBox(width: 16),
-          const Text(
-            'Edit Task',
+          Text(
+            'Edit Task'.tr,
             style: TextStyle(
               color: Colors.white,
               fontSize: 20,
@@ -82,8 +82,8 @@ class EditTaskScreen extends BaseView<EditTaskController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Start',
+              Text(
+                'Start'.tr,
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 14,
@@ -115,8 +115,8 @@ class EditTaskScreen extends BaseView<EditTaskController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Ends',
+              Text(
+                'Ends'.tr,
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 14,
@@ -151,8 +151,8 @@ class EditTaskScreen extends BaseView<EditTaskController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Title',
+        Text(
+          'Title'.tr,
           style: TextStyle(
             color: Colors.grey,
             fontSize: 14,
@@ -162,7 +162,7 @@ class EditTaskScreen extends BaseView<EditTaskController> {
         TextField(
           controller: controller.titleController,
           decoration: InputDecoration(
-            hintText: 'Enter task title',
+            hintText: 'Enter task title'.tr,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: Colors.grey[300]!),
@@ -181,8 +181,8 @@ class EditTaskScreen extends BaseView<EditTaskController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Category',
+        Text(
+          'Category'.tr,
           style: TextStyle(
             color: Colors.grey,
             fontSize: 14,
@@ -212,8 +212,8 @@ class EditTaskScreen extends BaseView<EditTaskController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Description',
+        Text(
+          'Description'.tr,
           style: TextStyle(
             color: Colors.grey,
             fontSize: 14,
@@ -224,7 +224,7 @@ class EditTaskScreen extends BaseView<EditTaskController> {
           controller: controller.descriptionController,
           maxLines: 4,
           decoration: InputDecoration(
-            hintText: 'Enter task description',
+            hintText: 'Enter task description'.tr,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: Colors.grey[300]!),
@@ -251,9 +251,10 @@ class EditTaskScreen extends BaseView<EditTaskController> {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        child: const Text(
-          'Edit Task',
-          style: TextStyle(
+        child: Text(
+          'Edit Task'.tr,
+          style: const TextStyle(
+            color: Colors.white,
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),

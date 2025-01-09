@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 
 abstract class BaseController extends GetxController {
   final _isLoading = false.obs;
@@ -19,10 +20,13 @@ abstract class BaseController extends GetxController {
 
   // Hiển thị lỗi
   void showError(String message) {
-    _errorMessage.value = message;
+    hideLoading();
     Get.snackbar(
-      'Lỗi',
-      message,
+      'error'.tr,
+      message.tr,
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: Colors.red,
+      colorText: Colors.white,
     );
   }
 
@@ -47,8 +51,19 @@ abstract class BaseController extends GetxController {
 
   void showMessage(String message) {
     Get.snackbar(
-      'Thông báo',
-      message,
+      'notification'.tr,
+      message.tr,
+    );
+  }
+
+  void showSuccess(String message) {
+    hideLoading();
+    Get.snackbar(
+      'success'.tr,
+      message.tr,
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: Colors.green,
+      colorText: Colors.white,
     );
   }
 }
