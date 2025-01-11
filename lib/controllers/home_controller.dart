@@ -34,18 +34,18 @@ class HomeController extends BaseController {
       hideLoading();
     } catch (e) {
       hideLoading();
-      showError('Error loading tasks: $e');
+      showError('Error loading tasks: $e'.tr);
     }
   }
 
   void filterTasks() {
     priorityTasks.value = _taskService.tasks
-        .where((task) => task.type == 'Priority Task')
+        .where((task) => task.type == 'Priority Task'.tr)
         .toList()
       ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
     dailyTasks.value = _taskService.tasks
-        .where((task) => task.type == 'Daily Task')
+        .where((task) => task.type == 'Daily Task'.tr)
         .toList()
       ..sort((a, b) => a.isCompleted ? 1 : -1);
       
@@ -68,7 +68,7 @@ class HomeController extends BaseController {
         await loadTasks();
       }
     } catch (e) {
-      showError('Error updating task: $e');
+      showError('Error updating task: $e'.tr);
     }
   }
 

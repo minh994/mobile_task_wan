@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import '../../core/base/base_view.dart';
 import '../../controllers/verify_email_controller.dart';
 import '../../core/constants/app_colors.dart';
-import '../../core/translations/app_translations.dart';
 class VerifyEmailScreen extends BaseView<VerifyEmailController> {
   const VerifyEmailScreen({super.key});
 
@@ -51,9 +50,9 @@ class VerifyEmailScreen extends BaseView<VerifyEmailController> {
   Widget _buildHeader() {
     return Column(
       children: [
-        const Text(
-          'TASK-WAN',
-          style: TextStyle(
+        Text(
+          'TASK-WAN'.tr,
+          style: const TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
             color: AppColors.primary,
@@ -61,16 +60,16 @@ class VerifyEmailScreen extends BaseView<VerifyEmailController> {
         ),
         const SizedBox(height: 8),
         Text(
-          'Management App',
+          'Management App'.tr,
           style: TextStyle(
             fontSize: 16,
             color: Colors.grey[600],
           ),
         ),
         const SizedBox(height: 32),
-        const Text(
-          'Xác thực tài khoản',
-          style: TextStyle(
+        Text(
+          'Verify account'.tr,
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -90,7 +89,7 @@ class VerifyEmailScreen extends BaseView<VerifyEmailController> {
     return Column(
       children: [
         Text(
-          'Chúng tôi đã gửi email xác thực đến',
+          'We have sent a verification email to'.tr,
           style: TextStyle(
             fontSize: 16,
             color: Colors.grey[600],
@@ -106,7 +105,7 @@ class VerifyEmailScreen extends BaseView<VerifyEmailController> {
         ),
         const SizedBox(height: 16),
         Text(
-          'Vui lòng kiểm tra email và nhấp vào liên kết để xác thực tài khoản của bạn',
+          'Please check your email and click the link to verify your account'.tr,
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 14,
@@ -120,9 +119,9 @@ class VerifyEmailScreen extends BaseView<VerifyEmailController> {
   Widget _buildResendButton() {
     return TextButton(
       onPressed: controller.resendVerificationEmail,
-      child: const Text(
-        'Gửi lại email xác thực',
-        style: TextStyle(
+      child: Text(
+        'Resend verification email'.tr,
+        style: const TextStyle(
           fontSize: 16,
           color: AppColors.primary,
           fontWeight: FontWeight.w600,

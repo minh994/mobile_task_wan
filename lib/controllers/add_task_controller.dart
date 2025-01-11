@@ -89,7 +89,7 @@ class AddTaskController extends BaseController {
 
   Future<void> saveTask() async {
     if (titleController.text.isEmpty) {
-      showError('Please enter task title');
+      showError('Please enter task title'.tr);
       return;
     }
 
@@ -103,7 +103,7 @@ class AddTaskController extends BaseController {
           description: descriptionController.text.trim(),
           createdAt: startDate.value,
           dueDate: endDate.value,
-          type: isPriorityTask.value ? 'Priority Task' : 'Daily Task',
+          type: isPriorityTask.value ? 'Priority Task'.tr : 'Daily Task'.tr,
           todoItems: todoItems.toList(),
           priority: isPriorityTask.value ? TaskPriority.high : TaskPriority.medium,
           progress: 0.0,
@@ -113,11 +113,11 @@ class AddTaskController extends BaseController {
         await _taskService.addTask(task, userId);
         hideLoading();
         Get.back(result: true);
-        showMessage('Task added successfully');
+        showMessage('Task added successfully'.tr);
       }
     } catch (e) {
       hideLoading();
-      showError('Error adding task: $e');
+      showError('Error adding task: $e'.tr);
     }
   }
 

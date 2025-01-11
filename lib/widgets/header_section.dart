@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
 class HeaderSection extends StatelessWidget {
   final String userName;
   final VoidCallback? onNotificationTap;
@@ -19,7 +19,7 @@ class HeaderSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Welcome $userName',
+              'Welcome'.tr + ' ${userName.tr}',
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -27,9 +27,9 @@ class HeaderSection extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 4),
-            const Text(
-              'Have a nice day!',
-              style: TextStyle(
+            Text(
+              'Have a nice day!'.tr,
+              style: const TextStyle(
                 fontSize: 16,
                 color: Colors.grey,
                 fontWeight: FontWeight.w500,

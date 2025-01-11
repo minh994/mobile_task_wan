@@ -27,8 +27,8 @@ class UserService extends GetxService {
         _userCache[userId] = user; // Lưu vào cache
       }
     } catch (e) {
-      print('Error loading user: $e');
-      throw Exception('Could not load user data');
+      print('Error loading user: $e'.tr);
+      throw Exception('Could not load user data'.tr);
     }
   }
 
@@ -51,8 +51,8 @@ class UserService extends GetxService {
       
       await loadUser(userId); // Reload để đảm bảo dữ liệu mới nhất
     } catch (e) {
-      print('Error updating user: $e');
-      throw Exception('Could not update user: $e');
+      print('Error updating user: $e'.tr);
+      throw Exception('Could not update user: $e'.tr);
     }
   }
 

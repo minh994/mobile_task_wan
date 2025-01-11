@@ -27,7 +27,7 @@ class LoginController extends BaseController {
 
   Future<void> login() async {
     if (email.value.isEmpty || password.value.isEmpty) {
-      showError('Vui lòng nhập đầy đủ thông tin');
+      showError('Please enter all information'.tr);
       return;
     }
 

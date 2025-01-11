@@ -22,12 +22,12 @@ class RegisterController extends BaseController {
 
   Future<void> register() async {
     if (email.value.isEmpty || password.value.isEmpty) {
-      showError('Vui lòng nhập đầy đủ thông tin');
+      showError('Please enter all information'.tr);
       return;
     }
 
     if (password.value != confirmPassword.value) {
-      showError('Mật khẩu không khớp');
+      showError('Password does not match'.tr);
       return;
     }
 
@@ -39,7 +39,7 @@ class RegisterController extends BaseController {
       if (UserCredential != null) {
         Get.offNamed('/verify-email', arguments: {'email': email.value});
       } else {
-        showError('User not found');
+        showError('User not found'.tr);
       }
     });
   }

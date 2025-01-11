@@ -40,8 +40,8 @@ class LoginScreen extends BaseView<LoginController> {
   Widget _buildHeader() {
     return Column(
       children: [
-        const Text(
-          'TASK-WAN',
+        Text(
+          'TASK-WAN'.tr,
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
@@ -80,8 +80,8 @@ class LoginScreen extends BaseView<LoginController> {
       child: TextField(
         controller: controller.emailTEC,
         onChanged: (value) => controller.email.value = value,
-        decoration: const InputDecoration(
-          hintText: 'Email',
+        decoration: InputDecoration(
+          hintText: 'Email'.tr,
           prefixIcon: Icon(
             Icons.email_outlined,
             color: AppColors.primary,
@@ -223,7 +223,7 @@ class LoginScreen extends BaseView<LoginController> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Don\'t have an account? '.tr,
+          'Don\'t have an account?'.tr,
           style: TextStyle(
             color: Colors.grey[600],
             fontSize: 14,
@@ -233,7 +233,7 @@ class LoginScreen extends BaseView<LoginController> {
           onTap: controller.goToRegister,
           child: Text(
             'Register'.tr,
-            style: TextStyle(
+            style: const TextStyle(
               color: AppColors.primary,
               fontSize: 14,
               fontWeight: FontWeight.w600,

@@ -13,6 +13,7 @@ class StatisticController extends BaseController {
   final totalTasks = 846.obs;
   final completedTasks = 682.obs;
 
+
   @override
   void onInit() {
     super.onInit();
@@ -33,7 +34,7 @@ class StatisticController extends BaseController {
       hideLoading();
     } catch (e) {
       hideLoading();
-      showError('Error loading statistics: $e');
+      showError('Error loading statistics: $e'.tr);
     }
   }
 
@@ -78,6 +79,6 @@ class StatisticController extends BaseController {
   }
 
   String getMonthName(int month) {
-    return DateFormat('MMMM').format(DateTime(2024, month));
+    return DateFormat('MMMM').format(DateTime(2024, month)).tr;
   }
 } 

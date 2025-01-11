@@ -18,9 +18,9 @@ class LogoutDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'Logout of Taskwan?',
-              style: TextStyle(
+            Text(
+              'Logout of Taskwan?'.tr,
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),
@@ -36,9 +36,9 @@ class LogoutDialog extends StatelessWidget {
                     borderRadius: BorderRadius.circular(4),
                   ),
                 )),
-                const Text(
-                  'Remember my login info',
-                  style: TextStyle(
+                Text(
+                  'Remember my login info'.tr,
+                  style: const TextStyle(
                     fontSize: 14,
                     color: Colors.black87,
                   ),
@@ -59,9 +59,9 @@ class LogoutDialog extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text(
-                  'Logout',
-                  style: TextStyle(
+                child: Text(
+                  'Logout'.tr,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
@@ -73,9 +73,9 @@ class LogoutDialog extends StatelessWidget {
               width: double.infinity,
               child: TextButton(
                 onPressed: () => Get.back(result: {'logout': false}),
-                child: const Text(
-                  'Cancel',
-                  style: TextStyle(
+                child: Text(
+                  'Cancel'.tr,
+                  style: const TextStyle(
                     color: Colors.black87,
                     fontSize: 16,
                   ),

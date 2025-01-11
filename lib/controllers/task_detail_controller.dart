@@ -32,19 +32,19 @@ class TaskDetailController extends BaseController {
   Future<void> deleteTask() async {
     final confirm = await Get.dialog<bool>(
       AlertDialog(
-        title: const Text('Delete Task'),
-        content: const Text('Are you sure you want to delete this task?'),
+        title: Text('Delete Task'.tr),
+        content: Text('Are you sure you want to delete this task?'.tr),
         actions: [
           TextButton(
             onPressed: () => Get.back(result: false),
-            child: const Text('Cancel'),
+            child: Text('Cancel'.tr),
           ),
           TextButton(
             onPressed: () => Get.back(result: true),
             style: TextButton.styleFrom(
               foregroundColor: Colors.red,
             ),
-            child: const Text('Delete'),
+            child: Text('Delete'.tr),
           ),
         ],
       ),
@@ -63,11 +63,11 @@ class TaskDetailController extends BaseController {
           
           // Return to previous screen
           Get.back(result: true);
-          showMessage('Task deleted successfully');
+          showMessage('Task deleted successfully'.tr);
         }
       } catch (e) {
         hideLoading();
-        showError('Error deleting task: $e');
+        showError('Error deleting task: $e'.tr);
       }
     }
   }

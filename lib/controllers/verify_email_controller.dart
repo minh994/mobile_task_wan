@@ -26,17 +26,17 @@ class VerifyEmailController extends BaseController {
       if (verified) {
         _timer?.cancel();
         isEmailVerified.value = true;
-        Get.offAllNamed('/verify-success');
+        Get.offAllNamed('/verify-success'.tr);
       }
     } catch (e) {
-      showError('Không thể kiểm tra trạng thái xác thực');
+      showError('Cannot check verification status'.tr);
     }
   }
 
   Future<void> resendVerificationEmail() async {
     await handleError(() async {
       await _authService.resendVerificationEmail();
-      showMessage('Đã gửi lại email xác thực');
+      showMessage('Resent verification email'.tr);
     });
   }
 

@@ -103,7 +103,7 @@ class TaskDetailScreen extends BaseView<TaskDetailController> {
         Expanded(
           child: _buildTimeBox(
             'Start'.tr,
-            DateFormat('dd MMM yyyy').format(controller.task.value.createdAt),
+            DateFormat('dd MMM yyyy'.tr).format(controller.task.value.createdAt),
             '',
             '',
           ),
@@ -112,7 +112,7 @@ class TaskDetailScreen extends BaseView<TaskDetailController> {
         Expanded(
           child: _buildTimeBox(
             'End'.tr,
-            DateFormat('dd MMM yyyy').format(controller.task.value.dueDate),
+            DateFormat('dd MMM yyyy'.tr).format(controller.task.value.dueDate),
             '',
             '',
           ),

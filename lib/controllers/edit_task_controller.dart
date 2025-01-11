@@ -54,7 +54,7 @@ class EditTaskController extends BaseController {
 
     if (date != null) {
       startDate.value = date;
-      if (taskType.value == 'Daily Task') {
+      if (taskType.value == 'Daily Task'.tr) {
         // Daily Task luôn kết thúc sau 1 ngày
         endDate.value = date.add(const Duration(days: 1));
       }
@@ -63,7 +63,7 @@ class EditTaskController extends BaseController {
 
   Future<void> selectEndDate() async {
     // Chỉ cho phép chọn end date với Priority Task
-    if (taskType.value == 'Daily Task') return;
+    if (taskType.value == 'Daily Task'.tr) return;
 
     final date = await Get.dialog<DateTime>(
       Dialog(
@@ -83,7 +83,7 @@ class EditTaskController extends BaseController {
 
   Future<void> saveTask() async {
     if (titleController.text.isEmpty) {
-      showError('Please enter task title');
+      showError('Please enter task title'.tr);
       return;
     }
 
@@ -99,7 +99,7 @@ class EditTaskController extends BaseController {
           dueDate: endDate.value,
           type: taskType.value,
           todoItems: originalTask.todoItems,
-          priority: taskType.value == 'Priority Task' 
+          priority: taskType.value == 'Priority Task'.tr 
               ? TaskPriority.high 
               : TaskPriority.medium,
           progress: originalTask.progress,
@@ -114,11 +114,11 @@ class EditTaskController extends BaseController {
         taskDetailController.updateTask(updatedTask);
 
         Get.back(result: true);
-        showMessage('Task updated successfully');
+        showMessage('Task updated successfully'.tr);
       }
     } catch (e) {
       hideLoading();
-      showError('Error updating task: $e');
+      showError('Error updating task: $e'.tr);
     }
   }
 

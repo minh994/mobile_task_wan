@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../core/constants/app_colors.dart';
-
 class CalendarPicker extends StatelessWidget {
   final DateTime selectedDate;
   final Function(DateTime) onDateSelected;
@@ -77,7 +77,7 @@ class CalendarPicker extends StatelessWidget {
   }
 
   Widget _buildWeekDays() {
-    const weekDays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+    final weekDays = ['Su'.tr, 'Mo'.tr, 'Tu'.tr, 'We'.tr  , 'Th'.tr, 'Fr'.tr, 'Sa'.tr];
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: weekDays

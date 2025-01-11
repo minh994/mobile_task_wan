@@ -21,12 +21,12 @@ class VerifyAccountScreen extends BaseView<VerifyAccountController> {
               ),
               const SizedBox(height: 32),
               Text(
-                'Xác thực email',
+                'Verify email'.tr,
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
               const SizedBox(height: 16),
               Text(
-                'Chúng tôi đã gửi email xác thực đến\n${controller.email}',
+                'We have sent a verification email to\n${controller.email}'.tr,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
@@ -46,11 +46,11 @@ class VerifyAccountScreen extends BaseView<VerifyAccountController> {
       if (controller.canResend.value) {
         return TextButton(
           onPressed: controller.resendVerificationEmail,
-          child: const Text('Gửi lại email xác thực'),
+          child: Text('Resend verification email'.tr),
         );
       }
       return Text(
-        'Gửi lại sau ${controller.resendCountdown.value} giây',
+        'Resend after ${controller.resendCountdown.value} seconds'.tr,
         style: const TextStyle(color: Colors.grey),
       );
     });
@@ -61,7 +61,7 @@ class VerifyAccountScreen extends BaseView<VerifyAccountController> {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: controller.checkEmailVerification,
-        child: const Text('Tôi đã xác thực email'),
+        child: Text('I have verified my email'.tr),
       ),
     );
   }

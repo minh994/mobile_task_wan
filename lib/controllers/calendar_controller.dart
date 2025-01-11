@@ -43,8 +43,8 @@ class CalendarController extends BaseController with GetTickerProviderStateMixin
         // Lọc tasks theo loại đã chọn
         tasks.value = allTasks.where((task) => 
           isPrioritySelected.value 
-            ? task.type == 'Priority Task'
-            : task.type == 'Daily Task'
+            ? task.type == 'Priority Task'.tr
+            : task.type == 'Daily Task'.tr
         ).toList();
 
         // Sắp xếp tasks
@@ -55,7 +55,7 @@ class CalendarController extends BaseController with GetTickerProviderStateMixin
       }
     } catch (e) {
       print('Error loading tasks: $e');
-      showError('Error loading tasks');
+      showError('Error loading tasks'.tr);
     }
   }
 

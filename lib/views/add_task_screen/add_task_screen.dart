@@ -176,8 +176,8 @@ class AddTaskScreen extends BaseView<AddTaskController> {
           ),
           child: TextField(
             controller: controller.titleController,
-            decoration: const InputDecoration(
-              hintText: 'Enter task title',
+            decoration: InputDecoration(
+              hintText: 'Enter task title'.tr,
               border: InputBorder.none,
               contentPadding: EdgeInsets.all(12),
             ),
@@ -201,9 +201,9 @@ class AddTaskScreen extends BaseView<AddTaskController> {
         const SizedBox(height: 8),
         Row(
           children: [
-            _buildCategoryButton('Priority Task', true),
+            _buildCategoryButton('Priority Task'.tr, true),
             const SizedBox(width: 16),
-            _buildCategoryButton('Daily Task', false),
+            _buildCategoryButton('Daily Task'.tr, false),
           ],
         ),
       ],
@@ -256,8 +256,8 @@ class AddTaskScreen extends BaseView<AddTaskController> {
           child: TextField(
             controller: controller.descriptionController,
             maxLines: 5,
-            decoration: const InputDecoration(
-              hintText: 'Enter task description',
+            decoration: InputDecoration(
+              hintText: 'Enter task description'.tr,
               border: InputBorder.none,
               contentPadding: EdgeInsets.all(12),
             ),

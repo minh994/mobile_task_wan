@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
 class AuthService extends GetxService {
   final _auth = FirebaseAuth.instance;
   final _googleSignIn = GoogleSignIn();
@@ -31,7 +32,7 @@ class AuthService extends GetxService {
       }
       return false;
     } catch (e) {
-      print('Error validating token: $e');
+      print('Error validating token: $e'.tr);
       return false;
     }
   }
@@ -144,7 +145,7 @@ class AuthService extends GetxService {
       await _auth.currentUser?.reload();
       return _auth.currentUser?.emailVerified ?? false;
     } catch (e) {
-      print('Error checking email verification: $e');
+      print('Error checking email verification: $e'.tr);
       return false;
     }
   }
@@ -153,7 +154,7 @@ class AuthService extends GetxService {
     try {
       await _auth.currentUser?.sendEmailVerification();
     } catch (e) {
-      throw Exception('Could not send verification email: $e');
+      throw Exception('Could not send verification email: $e'.tr);
     }
   }
 
@@ -161,7 +162,7 @@ class AuthService extends GetxService {
     try {
       final user = _auth.currentUser;
       if (user == null || user.email == null) {
-        throw Exception('Không tìm thấy thông tin người dùng');
+        throw Exception('Cannot find user information'.tr);
       }
 
       // Create credential
@@ -176,14 +177,14 @@ class AuthService extends GetxService {
       if (e is FirebaseAuthException) {
         switch (e.code) {
           case 'wrong-password':
-            throw Exception('Mật khẩu hiện tại không đúng');
+            throw Exception('Current password is incorrect'.tr);
           case 'too-many-requests':
-            throw Exception('Quá nhiều yêu cầu. Vui lòng thử lại sau');
+            throw Exception('Too many requests. Please try again later'.tr);
           default:
-            throw Exception('Lỗi xác thực: ${e.message}');
+            throw Exception('Authentication error: ${e.message}');
         }
       }
-      throw Exception('Lỗi xác thực: ${e.toString()}');
+      throw Exception('Authentication error: ${e.toString()}');
     }
   }
 
@@ -191,7 +192,7 @@ class AuthService extends GetxService {
     try {
       final user = _auth.currentUser;
       if (user == null) {
-        throw Exception('Không tìm thấy thông tin người dùng');
+        throw Exception('Cannot find user information'.tr);
       }
 
       await user.updatePassword(newPassword);
@@ -199,14 +200,14 @@ class AuthService extends GetxService {
       if (e is FirebaseAuthException) {
         switch (e.code) {
           case 'weak-password':
-            throw Exception('Mật khẩu mới quá yếu');
+            throw Exception('New password is too weak'.tr);
           case 'requires-recent-login':
-            throw Exception('Cần đăng nhập lại để thực hiện thao tác này');
+            throw Exception('Need to login again to perform this action'.tr);
           default:
-            throw Exception('Lỗi đổi mật khẩu: ${e.message}');
+            throw Exception('Error changing password: ${e.message}');
         }
       }
-      throw Exception('Lỗi đổi mật khẩu: ${e.toString()}');
+      throw Exception('Error changing password: ${e.toString()}');
     }
   }
 }

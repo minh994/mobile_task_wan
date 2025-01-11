@@ -29,7 +29,7 @@ class LocationController extends BaseController {
       _checkLocationPermission();
     } catch (e) {
       print('Error initializing location: $e');
-      showError('Không thể khởi tạo dịch vụ định vị');
+      showError('Cannot initialize location service'.tr);
     }
   }
 
@@ -44,7 +44,7 @@ class LocationController extends BaseController {
       if (!serviceEnabled) {
         serviceEnabled = await location.requestService();
         if (!serviceEnabled) {
-          showError('Vui lòng bật dịch vụ định vị');
+          showError('Please enable location service'.tr);
           return;
         }
       }
@@ -53,7 +53,7 @@ class LocationController extends BaseController {
       if (permissionGranted == loc.PermissionStatus.denied) {
         permissionGranted = await location.requestPermission();
         if (permissionGranted != loc.PermissionStatus.granted) {
-          showError('Cần cấp quyền truy cập vị trí');
+          showError('Need to grant location access.'.tr);
           return;
         }
       }
@@ -61,8 +61,8 @@ class LocationController extends BaseController {
       // Không gọi getCurrentLocation ở đây nữa
       // Nó sẽ được gọi trong onMapCreated
     } catch (e) {
-      print('Error checking permissions: $e');
-      showError('Không thể kiểm tra quyền truy cập');
+      print('Error checking permissions: $e'.tr);
+      showError('Cannot check permissions'.tr);
     }
   }
 
@@ -74,7 +74,7 @@ class LocationController extends BaseController {
       
       final locationData = await location.getLocation();
       if (locationData.latitude == null || locationData.longitude == null) {
-        throw Exception('Không thể lấy được tọa độ');
+        throw Exception('Cannot retrieve coordinates'.tr);
       }
       
       final newLocation = LatLng(
@@ -86,7 +86,7 @@ class LocationController extends BaseController {
       try {
         mapController.move(newLocation, currentZoom.value);
       } catch (e) {
-        print('Error moving map: $e');
+        print('Error moving map: $e'.tr);
       }
 
       final placemarks = await placemarkFromCoordinates(
@@ -110,7 +110,7 @@ class LocationController extends BaseController {
     } catch (e) {
       hideLoading();
       print('Error getting location: $e');
-      showError('Không thể lấy vị trí hiện tại');
+      showError('Cannot get current location.'.tr);
     }
   }
 

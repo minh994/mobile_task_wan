@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../core/constants/app_colors.dart';
-import '../../core/translations/app_translations.dart';
+
 class VerifySuccessScreen extends StatelessWidget {
   const VerifySuccessScreen({super.key});
 
@@ -33,9 +33,9 @@ class VerifySuccessScreen extends StatelessWidget {
   Widget _buildHeader() {
     return Column(
       children: [
-        const Text(
-          'TASK-WAN',
-          style: TextStyle(
+        Text(
+          'TASK-WAN'.tr,
+          style: const TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
             color: AppColors.primary,
@@ -50,9 +50,9 @@ class VerifySuccessScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 32),
-        const Text(
-          'Verify Account',
-          style: TextStyle(
+        Text(
+          'Verify account'.tr,
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -72,7 +72,7 @@ class VerifySuccessScreen extends StatelessWidget {
     return Text(
       'Your account has been\nVerified Successfully!'.tr,
       textAlign: TextAlign.center,
-      style: TextStyle(
+      style: const TextStyle(
         color: Colors.black87,
         fontSize: 20,
         fontWeight: FontWeight.bold,
@@ -96,7 +96,7 @@ class VerifySuccessScreen extends StatelessWidget {
         ),
         child: Text(
           'Go to Home'.tr,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 16,
             color: Colors.white,
             fontWeight: FontWeight.w600,

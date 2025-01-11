@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../models/task.dart';
 
 class DailyTasksSection extends StatelessWidget {
@@ -14,8 +15,8 @@ class DailyTasksSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (tasks.isEmpty) {
-      return const Center(
-        child: Text('No daily tasks'),
+      return  Center(
+        child: Text('No daily tasks'.tr),
       );
     }
 

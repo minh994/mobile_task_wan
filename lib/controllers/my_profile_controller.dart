@@ -20,7 +20,7 @@ class MyProfileController extends BaseController {
   final photoUrl = ''.obs;
 
   String get formattedDate => 
-      DateFormat('MMM dd, yyyy').format(dateOfBirth.value);
+      DateFormat('MMM dd, yyyy'.tr).format(dateOfBirth.value);
 
   @override
   void onInit() {
@@ -54,7 +54,7 @@ class MyProfileController extends BaseController {
       hideLoading();
     } catch (e) {
       hideLoading();
-      showError('Error loading user data: $e');
+      showError('Error loading user data: $e'.tr);
     }
   }
 
@@ -88,7 +88,7 @@ class MyProfileController extends BaseController {
       }
     } catch (e) {
       hideLoading();
-      showError('Error picking image: $e');
+      showError('Error picking image: $e'.tr);
     }
   }
 
@@ -117,11 +117,11 @@ class MyProfileController extends BaseController {
 
         hideLoading();
         Get.back();
-        showMessage('Profile updated successfully');
+        showMessage('Profile updated successfully'.tr);
       }
     } catch (e) {
       hideLoading();
-      showError('Error updating profile: $e');
+      showError('Error updating profile: $e'.tr);
     }
   }
 

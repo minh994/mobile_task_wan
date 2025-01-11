@@ -49,7 +49,7 @@ class CalendarScreen extends BaseView<CalendarController> {
               const SizedBox(width: 12),
               GetX<CalendarController>(
                 builder: (controller) => Text(
-                  controller.formatDate(controller.selectedDate.value),
+                  controller.formatDate(controller.selectedDate.value).tr,
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -311,7 +311,7 @@ class CalendarScreen extends BaseView<CalendarController> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          task.title,
+                          task.title.tr,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -330,7 +330,7 @@ class CalendarScreen extends BaseView<CalendarController> {
                   if (task.description.isNotEmpty) ...[
                     const SizedBox(height: 12),
                     Text(
-                      task.description,
+                      task.description.tr,
                       style: TextStyle(
                         color: Colors.grey[600],
                         fontSize: 14,

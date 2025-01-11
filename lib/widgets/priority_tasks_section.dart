@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../models/task.dart';
 import 'priority_task_card.dart';
 
@@ -15,9 +16,9 @@ class PriorityTasksSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'My Priority Task',
-          style: TextStyle(
+         Text(
+          'My Priority Task'.tr,
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w600,
             height: 1.2,

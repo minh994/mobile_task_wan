@@ -16,7 +16,7 @@ class NotificationController extends BaseController {
 
   Future<void> loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
-    notificationTone.value = prefs.getString('notification_tone') ?? 'Silent';
+    notificationTone.value = prefs.getString('notification_tone') ?? 'Silent'.tr;
     vibrate.value = prefs.getBool('vibrate') ?? false;
     popupNotification.value = prefs.getBool('popup_notification') ?? true;
     highPriorityNotification.value = prefs.getBool('high_priority_notification') ?? false;

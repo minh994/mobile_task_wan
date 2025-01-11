@@ -172,7 +172,7 @@ class RegisterScreen extends BaseView<RegisterController> {
           onChanged: (value) => controller.confirmPassword.value = value,
           obscureText: !controller.isConfirmPasswordVisible.value,
           decoration: InputDecoration(
-            hintText: 'Confirm Password'.tr,
+            hintText: 'Confirm password'.tr,
             prefixIcon: const Icon(
               Icons.lock_outline,
               color: AppColors.primary,

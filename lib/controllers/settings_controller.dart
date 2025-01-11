@@ -16,8 +16,8 @@ class SettingsController extends BaseController {
   }
 
   void checkForUpdates() {
-    showMessage('Checking for updates...');
-    // TODO: Implement update check
+    showMessage('Checking for updates...'.tr);
+
   }
 
   void goToAbout() {
@@ -25,7 +25,7 @@ class SettingsController extends BaseController {
   }
 
   void inviteFriend() {
-    // TODO: Implement share functionality
-    showMessage('Share feature coming soon!');
+
+    showMessage('Share feature coming soon!'.tr);
   }
 } 

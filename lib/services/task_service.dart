@@ -64,7 +64,7 @@ class TaskService extends GetxService {
 
       await loadTasks(userId);
     } catch (e) {
-      print('Error updating task: $e');
+      print('Error updating task: $e'.tr);
       rethrow;
     }
   }
@@ -84,7 +84,7 @@ class TaskService extends GetxService {
       
       tasks.refresh();
     } catch (e) {
-      print('Error deleting task: $e');
+      print('Error deleting task: $e'.tr);
       rethrow;
     }
   }
@@ -102,7 +102,7 @@ class TaskService extends GetxService {
       _cache[cacheKey] = tasks;
       return tasks;
     } catch (e) {
-      print('Error getting tasks by date: $e');
+      print('Error getting tasks by date: $e'.tr);
       return [];
     }
   }
@@ -133,7 +133,7 @@ class TaskService extends GetxService {
       
       return tasksForDate;
     } catch (e) {
-      print('Error getting tasks by date: $e');
+      print('Error getting tasks by date: $e'.tr);
       return [];
     }
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../models/task.dart';
 
 class PriorityTaskCard extends StatelessWidget {
@@ -65,7 +66,7 @@ class PriorityTaskCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    '${task.dueDate} days',
+                    '${task.dueDate.difference(DateTime.now()).inDays} days'.tr,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 12,
@@ -91,9 +92,9 @@ class PriorityTaskCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Progress',
-                  style: TextStyle(
+                Text(
+                  'Progress'.tr,
+                  style: const TextStyle(
                     color: Colors.white70,
                     fontSize: 12,
                     fontWeight: FontWeight.w500,

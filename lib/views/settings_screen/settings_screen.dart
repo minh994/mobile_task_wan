@@ -4,7 +4,6 @@ import '../../core/base/base_view.dart';
 import '../../controllers/settings_controller.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/routes/app_router.dart';
-import '../../core/translations/app_translations.dart';
 
 class SettingsScreen extends BaseView<SettingsController> {
   const SettingsScreen({super.key});

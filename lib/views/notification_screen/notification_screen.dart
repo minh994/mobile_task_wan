@@ -105,7 +105,7 @@ class NotificationScreen extends BaseView<NotificationController> {
         ),
         const SizedBox(height: 8),
         Obx(() => Text(
-          controller.vibrate.value ? 'On' : 'Off',
+          controller.vibrate.value ? 'On'.tr : 'Off'.tr,
           style: const TextStyle(
             fontSize: 16,
           ),
@@ -127,7 +127,7 @@ class NotificationScreen extends BaseView<NotificationController> {
         ),
         const SizedBox(height: 8),
         Obx(() => Text(
-          controller.popupNotification.value ? 'On' : 'Off',
+          controller.popupNotification.value ? 'On'.tr : 'Off'.tr,
           style: const TextStyle(
             fontSize: 16,
           ),
